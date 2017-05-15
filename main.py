@@ -28,10 +28,8 @@ acc = 0
 
 while True:
     screen.fill(sky)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT: sys.exit()
 
-    # moving plane
+    # moving plane, accelerates instead of instant movement for more smoothness
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_w] == 1 and acc > -3:
         acc += - 0.25
@@ -39,15 +37,26 @@ while True:
         acc += 0.25
     pY += acc
 
+    # updates plane image
     screen.blit(planeImg, (pX, pY))
 
     # shooting
-
+    mouse = pygame.mouse.get_pressed()
+    if mouse[0] == 1:
+        #get mouse position
+        mousePos = pygame.mouse.get_pos()
+        mouseX = mousePos[0]
+        mouseY = mousePos[1]
+        # test if it works
+        pygame.draw.rect(screen, (255,255,255), (mouseX - 10, mouseY - 10, 20, 20), 0)
 
     pygame.display.update()  # updates display
     clock.tick(60)  # should make it 60FPS max
 
-# exiting
+    # exiting
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT: sys.exit()
+
 pygame.quit()
 quit()
 
