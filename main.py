@@ -23,20 +23,20 @@ sky = (70,110,220)
 # initialize plane
 crashed = False
 planeImg = pygame.image.load("drone.png")
-pX = 50
+pX = 25
 pY = 50
 acc = 0
 
 # initialize bullets
 bulImg = pygame.image.load("bullet.png")
-bulX = [-50, -50, -50]
-bulY = [-50, -50, -50]
-bulTarX = [-50, -50, -50]
-bulTarY = [-50, -50, -50]
-bulOrgX = [-50, -50, -50]
-bulOrgY = [-50, -50, -50]
-bulMaxSpeed = 20  # not sure exact thing
-maxReload = 30  # two shots per sec
+bulX = [-50, -50, -50, -50]
+bulY = [-50, -50, -50, -50]
+bulTarX = [-50, -50, -50, -50]
+bulTarY = [-50, -50, -50, -50]
+bulOrgX = [-50, -50, -50, -50]
+bulOrgY = [-50, -50, -50, -50]
+bulMaxSpeed = 20  # num of units per game tick that bullet moves, def 20
+maxReload = 30  # num ticks before u can shoot again, def 30 (2 shots /sec)
 reload = 0
 curBul = 0
 
@@ -64,9 +64,9 @@ while True:
         print ("YOU CRASHED")
         time.sleep(1)
         sys.exit()
-
     elif acc < 3:
         acc += 0.25
+
     pY += acc
 
     # updates plane image
@@ -77,7 +77,7 @@ while True:
     if mouse[0] == 1 and reload <= 0:
         # get mouse position
         curBul += 1
-        if curBul > 2:
+        if curBul > 3:
             curBul = 0
         mousePos = pygame.mouse.get_pos()
         bulTarX[curBul] = mousePos[0]
@@ -91,7 +91,7 @@ while True:
         reload = maxReload
 
     # if bullet is in air
-    for i in range(3):
+    for i in range(4):
         if bulTarX[i] > -25 and bulTarY[i] > -25 and bulX[i] < disLength + 100 and bulY[i] < disHeight + 100:
             bulSpeed = math.sqrt(((bulTarX[i] - bulOrgX[i]) ** 2) + ((bulTarY[i] - bulOrgY[i]) ** 2))
             ratio = bulMaxSpeed / bulSpeed
