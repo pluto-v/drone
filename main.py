@@ -33,7 +33,9 @@ bulX = -50
 bulY = -50
 bulTarX = 0
 bulTarY = 0
-bulSpeed = 20  # not sure exact thing
+bulOrgX = 0
+bulOrgY = 0
+bulMaxSpeed = 20  # not sure exact thing
 reload = 30  # two shots per sec
 
 while True:
@@ -58,35 +60,25 @@ while True:
     if mouse[0] == 1 and reload <= 0:
         # get mouse position
         mousePos = pygame.mouse.get_pos()
-        bulTarX = mousePos[0] * 10
-        bulTarY = mousePos[1] * 10
+        bulTarX = mousePos[0]
+        bulTarY = mousePos[1]
         # set bullet to gun position on plane sprite
         bulX = pX + 60
         bulY = pY + 30
-
+        bulOrgX = bulX
+        bulOrgY = bulY
         # test if it works
         # pygame.draw.rect(screen, (255,255,255), (mouseX - 10, mouseY - 10, 20, 20), 0)
-
         reload = 30
 
     # if bullet is in air
-    if bulTarX > 25 and bulTarY > 25:
-        # eBulSpeed = math.sqrt(abs(yDiff) ** 2 + abs(xDiff) ** 2)
-        # ratio = 350 / eBulSpeed
-        # # set bullet to certain speed
-        # yDiff *= ratio
-        # xDiff *= ratio
-        #
-        # eShotY[i] += yDiff / 100
-        # eShotX[i] += xDiff / 100
-
-        xDiff = (bulTarX - bulX)
-        yDiff = (bulTarY - bulY)
-        ratio = bulSpeed / (math.sqrt(abs(xDiff) ** 2 + abs(yDiff) ** 2))
-        xDiff *= ratio
-        yDiff *= ratio
-        bulX += xDiff
-        bulY += yDiff
+    if bulTarX > 25 and bulTarY > 25 and bulX < disLength + 100 and bulY < disHeight + 100:
+        bulSpeed = math.sqrt((bulOrgX ** 2) + (bulOrgY ** 2))
+        ratio = bulMaxSpeed / bulSpeed
+        travelX = abs(bulTarX - bulOrgX) * ratio
+        travelY = abs(bulTarY - bulOrgY) * ratio
+        bulX += travelX
+        bulY += travelY
 
         screen.blit(bulImg, (bulX, bulY))
 
