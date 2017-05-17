@@ -51,7 +51,7 @@ curBul = 0
 landImg = pygame.image.load("land.png")
 landX = -50
 
-# intialize
+# intialize enemy bullet stuff
 
 
 while True:
@@ -115,20 +115,19 @@ while True:
 
             screen.blit(bulImg, (bulX[i], bulY[i]))
 
+    # moving the land
+    landX -= 5 # Also use this to adjust plane speed
+
+    if landX < -1250:
+        landX = -10
+
     screen.blit(landImg, (landX, disHeight - 125))
-    alien = pygame.image.load("alien.png")
-    screen.blit(alien, (500, 100))
+
     # updates display
     pygame.display.update()
 
     # should make it 60FPS max
     clock.tick(60)
-
-    # moving the land
-    landX -= 10 # Also use this to adjust plane speed
-
-    if landX < -2300:
-        landX = 800
 
     # exiting
     for event in pygame.event.get():
