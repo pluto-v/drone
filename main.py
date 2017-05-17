@@ -49,7 +49,7 @@ curBul = 0
 
 # initialize land/obstacles
 landImg = pygame.image.load("land.png")
-landX = -50
+landX = 10
 
 # intialize enemy bullet stuff
 
@@ -68,17 +68,6 @@ while True:
     elif 10 > pY or pressed[pygame.K_w] == 0 and acc < 3:
         acc += 0.25
         planeImg = pygame.image.load("drone.png")
-
-    # checking for ground collision
-    if pY >= disHeight - 75:
-        # CRASH
-        # pY = disHeight - 75
-        # acc = 0
-        screen.fill((200,0,0))
-        pygame.display.update()
-        print ("YOU CRASHED")
-        time.sleep(1)
-        sys.exit()
 
     pY += acc
 
@@ -118,10 +107,23 @@ while True:
     # moving the land
     landX -= 5 # Also use this to adjust plane speed
 
-    if landX < -1250:
+    if landX < -2550:
         landX = -10
 
-    screen.blit(landImg, (landX, disHeight - 125))
+    screen.blit(landImg, (landX, disHeight - 160))
+
+    # checking for ground collision, has to be here due it checking colour, if we find a diff way move it back
+    colour = screen.get_at((int(pX + 40), int(pY + 30)))
+    # colour of most of ground (green part): (168, 224, 101, 255) RGBA
+    if pY >= disHeight - 51 or colour == (168,224,101,255):
+        # CRASH
+        # pY = disHeight - 75
+        # acc = 0
+        screen.fill((200,0,0))
+        pygame.display.update()
+        print ("YOU CRASHED")
+        time.sleep(1)
+        sys.exit()
 
     # updates display
     pygame.display.update()
