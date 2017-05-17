@@ -5,6 +5,13 @@ import pyganim
 import time
 import math
 
+'''
+TO DO LIST:
+- add enemies
+- moving landscape
+- maybe high score stuff
+
+'''
 
 # initiate pygame
 pygame.init()
@@ -40,9 +47,11 @@ maxReload = 30  # num ticks before u can shoot again, def 30 (2 shots /sec)
 reload = 0
 curBul = 0
 
-# initialize land
+# initialize land/obstacles
 landImg = pygame.image.load("land.png")
 landX = -50
+
+# intialize
 
 
 while True:
