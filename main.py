@@ -7,8 +7,8 @@ import math
 
 '''
 TO DO LIST:
-- add enemies
-- moving landscape
+- add enemies (done)
+- moving landscape (done)
 - maybe high score stuff
 
 '''
@@ -116,7 +116,8 @@ while True:
             screen.blit(bulImg, (bulX[i], bulY[i]))
 
     screen.blit(landImg, (landX, disHeight - 125))
-
+    alien = pygame.image.load("alien.png")
+    screen.blit(alien, (500, 100))
     # updates display
     pygame.display.update()
 
@@ -125,6 +126,7 @@ while True:
 
     # moving the land
     landX -= 10 # Also use this to adjust plane speed
+
     if landX < -2300:
         landX = 800
 
