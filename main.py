@@ -55,7 +55,13 @@ while True:
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_w] == 1 and acc > -3 and 10 < pY:
         acc += - 0.25
-    elif pY >= disHeight - 75:
+        planeImg = pygame.image.load("droneUp.png")
+    elif 10 > pY or pressed[pygame.K_w] == 0 and acc < 3:
+        acc += 0.25
+        planeImg = pygame.image.load("drone.png")
+
+    # checking for ground collision
+    if pY >= disHeight - 75:
         # CRASH
         # pY = disHeight - 75
         # acc = 0
@@ -64,8 +70,6 @@ while True:
         print ("YOU CRASHED")
         time.sleep(1)
         sys.exit()
-    elif acc < 3:
-        acc += 0.25
 
     pY += acc
 
