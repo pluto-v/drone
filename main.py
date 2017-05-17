@@ -108,9 +108,17 @@ while True:
 
     screen.blit(landImg, (landX, disHeight - 125))
 
-    pygame.display.update()  # updates display
+    # updates display
+    pygame.display.update()
 
-    clock.tick(60)  # should make it 60FPS max
+    # should make it 60FPS max
+    clock.tick(60)
+
+    # moving the land
+    landX -= 10 # Also use this to adjust plane speed
+    if landX < -2300:
+        landX = 800
+
     # exiting
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
