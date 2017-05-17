@@ -35,6 +35,7 @@ pY = 50
 acc = 0
 
 # initialize bullets
+expImg = pygame.image.load("explode.png")
 bulImg = pygame.image.load("bullet.png")
 bulX = [-50, -50, -50, -50]
 bulY = [-50, -50, -50, -50]
@@ -42,6 +43,7 @@ bulTarX = [-50, -50, -50, -50]
 bulTarY = [-50, -50, -50, -50]
 bulOrgX = [-50, -50, -50, -50]
 bulOrgY = [-50, -50, -50, -50]
+bulExploded = [False, False, False, False]
 bulMaxSpeed = 20  # num of units per game tick that bullet moves, def 20
 maxReload = 30  # num ticks before u can shoot again, def 30 (2 shots /sec)
 reload = 0
@@ -88,13 +90,14 @@ while True:
         bulY[curBul] = pY + 30
         bulOrgX[curBul] = bulX[curBul]
         bulOrgY[curBul] = bulY[curBul]
+        bulExploded[curBul] = False
         # test if it works
         # pygame.draw.rect(screen, (255,255,255), (mouseX - 10, mouseY - 10, 20, 20), 0)
         reload = maxReload
 
     # if bullet is in air
     for i in range(4):
-        if bulTarX[i] > -25 and bulTarY[i] > -25 and bulX[i] < disLength + 100 and bulY[i] < disHeight + 100:
+        if bulTarX[i] > -25 and bulTarY[i] > -25 and bulX[i] < disLength + 100 and bulY[i] < disHeight + 100 and bulExploded[i] == False:
             bulSpeed = math.sqrt(((bulTarX[i] - bulOrgX[i]) ** 2) + ((bulTarY[i] - bulOrgY[i]) ** 2))
             ratio = bulMaxSpeed / bulSpeed
             travelX = (bulTarX[i] - bulOrgX[i]) * ratio
@@ -102,7 +105,8 @@ while True:
             bulX[i] += travelX
             bulY[i] += travelY
 
-            screen.blit(bulImg, (bulX[i], bulY[i]))
+            screen.blit(bulImg,(bulX[i] + 2, bulY[i] + 2))
+
 
     # moving the land
     landX -= 5 # Also use this to adjust plane speed
@@ -124,6 +128,23 @@ while True:
         print ("YOU CRASHED")
         time.sleep(1)
         sys.exit()
+
+    # checking for bullet collission
+    for i in range(4):
+        # ground
+        if bulExploded[i] == True:
+            bulX[i] += -5
+            screen.blit(expImg, (bulX[i] + 2, bulY[i] + 2))
+            if bulX[i] < bulTarX[i] - 60:
+                bulX[i] = -50
+                bulTarX[i] = -50
+                bulExploded[i] = False
+
+        elif bulX[i] > 1 and bulY[i] > 1 and bulX[i] < disLength - 1 and bulY[i] < disHeight - 1:
+            colour = screen.get_at((int(bulX[i]) + 2, int(bulY[i]) + 2))
+            if colour == (168,224,101,255):
+                bulTarX[i] = bulX[i]
+                bulExploded[i] = True
 
     # updates display
     pygame.display.update()
