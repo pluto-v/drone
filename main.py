@@ -57,7 +57,29 @@ curBul = 0
 landImg = pygame.image.load("land.png")
 landX = 10
 
-# intialize enemy bullet stuff
+# intialize enemies
+enemyImg = pygame.image.load("enemy.png")
+enemyX = [-100]
+enemyY = [100]
+eBulX = [-100]
+eBulY = [100]
+eBulTarX = [-50]
+eBulTarY = [-50]
+eBulOrgX = [-50]
+eBulOrgY = [-50]
+for i in range (4):  # max 4 enemies at once
+    enemyX.append(-100)
+    enemyY.append(100)
+for i in range(10):  # max 10 enemy bullets at once
+    eBulX.append(-50)
+    eBulY.append(-50)
+    eBulTarX.append(-50)
+    eBulTarY.append(-50)
+    eBulOrgX.append(-50)
+    eBulOrgY.append(-50)
+
+enemyTimer = random.randint(10,50)
+nextEnemy = 0
 
 
 while True:
@@ -65,6 +87,7 @@ while True:
 
     # counting down timers
     reload += -1
+    enemyTimer += -1
 
     # moving plane, accelerates instead of instant movement for more smoothness
     pressed = pygame.key.get_pressed()
@@ -119,6 +142,30 @@ while True:
         landX = -10
 
     screen.blit(landImg, (landX, disHeight - 160))
+
+
+    # SPAWN ENEMIES
+    if enemyTimer <= 0:
+        enemyTimer = random.randint(80,160)  # def 80 - 160
+        nextEnemy += 1
+        if nextEnemy > 3:
+            nextEnemy = 0
+
+        for i in range(6):
+            colour = screen.get_at((disLength - 10, disHeight - 120 + i * 15))
+            if colour == (168,224,101,255):
+                enemyY[nextEnemy] = disHeight - 175 + i * 15
+                break
+            else:
+                enemyY[nextEnemy] = disHeight - 90
+
+        enemyX[nextEnemy] = disLength
+
+    # move enemies forward
+    for i in range(4):
+        if enemyX[i] > -30:
+            enemyX[i] -= forwardSpeed
+            screen.blit(enemyImg, (enemyX[i], enemyY[i]))
 
     # checking for ground collision, has to be here due it checking colour, if we find a diff way move it back
     colour = screen.get_at((int(pX + 40), int(pY + 30)))
