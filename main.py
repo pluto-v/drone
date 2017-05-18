@@ -33,7 +33,7 @@ planeImg = pygame.image.load("drone.png")
 pX = 25
 pY = 50
 acc = 0
-forwardSpeed = 5
+forwardSpeed = 5  # def 5
 
 # initialize bullets
 expImg = pygame.image.load("explode.png")
@@ -106,7 +106,7 @@ while True:
             bulX[i] += travelX
             bulY[i] += travelY
 
-            screen.blit(bulImg,(bulX[i] + 2, bulY[i] + 2))
+            screen.blit(bulImg,(bulX[i], bulY[i]))
 
 
     # moving the land
@@ -135,14 +135,14 @@ while True:
         # ground
         if bulExploded[i] == True:
             bulX[i] -= forwardSpeed
-            screen.blit(expImg, (bulX[i] + 2, bulY[i] + 2))
+            screen.blit(expImg, (bulX[i] - 10, bulY[i] - 10))
             if bulX[i] < bulTarX[i] - 60:
                 bulX[i] = -50
                 bulTarX[i] = -50
                 bulExploded[i] = False
 
         elif bulX[i] > 0 and bulY[i] > 0 and bulX[i] < disLength - 3 and bulY[i] < disHeight - 3:
-            colour = screen.get_at((int(bulX[i]) + 2, int(bulY[i]) + 2))
+            colour = screen.get_at((int(bulX[i]), int(bulY[i])))
             if colour == (168,224,101,255):
                 bulTarX[i] = bulX[i]
                 bulExploded[i] = True
