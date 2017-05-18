@@ -7,7 +7,7 @@ import math
 
 '''
 TO DO LIST:
-- add enemies (done)
+- add enemies
 - moving landscape (done)
 - maybe high score stuff
 
@@ -87,7 +87,7 @@ while True:
         mousePos = pygame.mouse.get_pos()
         bulTarX[curBul] = mousePos[0]
         bulTarY[curBul] = mousePos[1]
-        bulX[curBul] = pX + 60
+        bulX[curBul] = pX + 75
         bulY[curBul] = pY + 30
         bulOrgX[curBul] = bulX[curBul]
         bulOrgY[curBul] = bulY[curBul]
@@ -124,6 +124,7 @@ while True:
         # CRASH
         # pY = disHeight - 75
         # acc = 0
+        time.sleep(0.5)
         screen.fill((200,0,0))
         pygame.display.update()
         print ("YOU CRASHED")
