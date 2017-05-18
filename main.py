@@ -11,6 +11,9 @@ TO DO LIST:
 - moving landscape (done)
 - maybe high score stuff
 
+BUG LIST (add to this if you discover one):
+- bullet will sometimes not explode at the far bottom right of screen
+
 '''
 
 # initiate pygame
@@ -87,7 +90,7 @@ while True:
         mousePos = pygame.mouse.get_pos()
         bulTarX[curBul] = mousePos[0]
         bulTarY[curBul] = mousePos[1]
-        bulX[curBul] = pX + 75
+        bulX[curBul] = pX + 80
         bulY[curBul] = pY + 30
         bulOrgX[curBul] = bulX[curBul]
         bulOrgY[curBul] = bulY[curBul]
@@ -134,7 +137,7 @@ while True:
     # checking for bullet collission
     for i in range(4):
         # ground
-        if bulExploded[i] == True:
+        if bulExploded[i]:
             bulX[i] -= forwardSpeed
             screen.blit(expImg, (bulX[i] - 10, bulY[i] - 10))
             if bulX[i] < bulTarX[i] - 60:
@@ -142,7 +145,7 @@ while True:
                 bulTarX[i] = -50
                 bulExploded[i] = False
 
-        elif bulX[i] > 0 and bulY[i] > 0 and bulX[i] < disLength - 3 and bulY[i] < disHeight - 3:
+        elif disLength - 1 > bulX[i] > 0 and disHeight - 1 > bulY[i] > 0:
             colour = screen.get_at((int(bulX[i]), int(bulY[i])))
             if colour == (168,224,101,255):
                 bulTarX[i] = bulX[i]
