@@ -36,7 +36,7 @@ planeImg = pygame.image.load("drone.png")
 pX = 25
 pY = 50
 acc = 0
-forwardSpeed = 5  # def 5
+forwardSpeed = 1  # def 5
 
 # initialize bullets
 expImg = pygame.image.load("explode.png")
@@ -146,7 +146,7 @@ while True:
 
     # SPAWN ENEMIES
     if enemyTimer <= 0:
-        enemyTimer = random.randint(80,160)  # def 80 - 160
+        enemyTimer = random.randint(250,400)  # def 80 - 160
         nextEnemy += 1
         if nextEnemy > 3:
             nextEnemy = 0
@@ -160,6 +160,7 @@ while True:
                 enemyY[nextEnemy] = disHeight - 90
 
         enemyX[nextEnemy] = disLength
+
 
     # move enemies forward
     for i in range(4):
@@ -192,11 +193,18 @@ while True:
                 bulTarX[i] = -50
                 bulExploded[i] = False
 
+        # if bullet hits ground or enemy
+        # 255,82,85,255 is colour of enemy
         elif disLength - 1 > bulX[i] > 0 and disHeight - 1 > bulY[i] > 0:
             colour = screen.get_at((int(bulX[i]), int(bulY[i])))
-            if colour == (168,224,101,255):
+            if colour == (168,224,101,255) or colour == (255,82,85,255):
                 bulTarX[i] = bulX[i]
                 bulExploded[i] = True
+
+                # do dmg to enemies
+                for j in range(4):
+                    if bulX[i] - 45 < enemyX[j] + 20 < bulX[i] + 45 and bulY[i] - 60 < enemyY[j] < bulY[i] + 60:
+                        print("it hit!")
 
     # updates display
     pygame.display.update()
