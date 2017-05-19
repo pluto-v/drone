@@ -244,13 +244,15 @@ while True:
         # 255,82,85,255 is colour of enemy
         elif disLength - 1 > bulX[i] > 0 and disHeight - 1 > bulY[i] > 0:
             colour = screen.get_at((int(bulX[i]), int(bulY[i])))
-            if colour == (168,224,101,255) or colour == (255,82,85,255):
+            colour2 = screen.get_at((int(bulX[i] - 6), int(bulY[i] + 8)))
+            if colour == (168,224,101,255) or colour == (255,82,85,255) or\
+                            colour2 == (168,224,101,255) or colour2 == (255,82,85,255):
                 bulTarX[i] = bulX[i]
                 bulExploded[i] = True
 
                 # do dmg to enemies
                 for j in range(4):
-                    if bulX[i] - 45 < enemyX[j] + 20 < bulX[i] + 45 and bulY[i] - 60 < enemyY[j] < bulY[i] + 60:
+                    if bulX[i] - 45 < enemyX[j] + 25 < bulX[i] + 45 and bulY[i] - 60 < enemyY[j] + 10 < bulY[i] + 60:
                         enemyHP[j] -= 1
 
     # moving and displaying enemy bullets
