@@ -13,6 +13,7 @@ TO DO LIST:
 
 BUG LIST (add to this if you discover one):
 - bullet will sometimes not explode at the far bottom right of screen
+- enemy dissapears off screen (DONE)
 
 '''
 
@@ -176,10 +177,9 @@ while True:
 
         enemyX[nextEnemy] = disLength
 
-
     # move enemies forward
     for i in range(4):
-        if enemyX[i] > -30:
+        if enemyX[i] > -70:
             enemyX[i] -= forwardSpeed
             screen.blit(enemyImg, (enemyX[i], enemyY[i]))
 
