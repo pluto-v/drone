@@ -65,6 +65,7 @@ maxReload = 30  # num ticks before u can shoot again, def 30 (2 shots /sec)
 reload = 0
 curBul = 0
 
+
 # initialize land/obstacles
 landImg = pygame.image.load("land.png")
 landX = 10
@@ -82,7 +83,9 @@ eBulTarX = [-50]
 eBulTarY = [-50]
 eBulOrgX = [-50]
 eBulOrgY = [-50]
+eNextBul = 0
 enemyHP = [maxHP]
+eCD = 0
 for i in range (4):  # max 4 enemies at once
     enemyX.append(-100)
     enemyY.append(100)
@@ -106,6 +109,7 @@ while True:
     reload += -1
     enemyTimer += -1
     speedCD += -1
+    eCD += -1
 
     # moving plane, accelerates instead of instant movement for more smoothness
     pressed = pygame.key.get_pressed()
@@ -202,6 +206,15 @@ while True:
             else:
                 screen.blit(enemyImg, (enemyX[i], enemyY[i]))
 
+            # SHOOTING FOR ENEMY
+            if eCD <= 0 and random.randint(1,60) == 1 and enemyHP[i] > 0:
+                eCD = 40
+                eNextBul += 1
+                if eNextBul > 10:
+                    eNextBul = 0
+                eBulX[eNextBul] = enemyX[i]
+                eBulY[eNextBul] = enemyY[i]
+
     # checking for ground collision, has to be here due it checking colour, if we find a diff way move it back
     colour = screen.get_at((int(pX + 40), int(pY + 30)))
     # colour of most of ground (green part): (168, 224, 101, 255) RGBA
@@ -239,6 +252,12 @@ while True:
                 for j in range(4):
                     if bulX[i] - 45 < enemyX[j] + 20 < bulX[i] + 45 and bulY[i] - 60 < enemyY[j] < bulY[i] + 60:
                         enemyHP[j] -= 1
+
+    # moving and displaying enemy bullets
+    for i in range(10):
+        if eBulX[i] > 0 and eBulY[i] > 0:
+            print("LUL", eNextBul)
+            eBulX[i] = - 10
 
     # updates display
     pygame.display.update()
