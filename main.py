@@ -38,6 +38,10 @@ pY = 50
 acc = 0
 forwardSpeed = 5  # def 5
 
+# SPEEDDDD BOOOSSTT
+speedCD = 0
+superSpeed = 10
+
 # initialize bullets
 expImg = pygame.image.load("explode.png")
 bulImg = pygame.image.load("bullet.png")
@@ -88,15 +92,26 @@ while True:
     # counting down timers
     reload += -1
     enemyTimer += -1
+    speedCD += -1
 
     # moving plane, accelerates instead of instant movement for more smoothness
     pressed = pygame.key.get_pressed()
-    if pressed[pygame.K_w] == 1 and acc > -3 and 10 < pY:
+    if pressed[pygame.K_SPACE] == 1 and speedCD <= 0:
+        acc = 0
+        speedCD = 420
+
+    elif pressed[pygame.K_w] == 1 and acc > -3 and 10 < pY and speedCD <= 360:
         acc += - 0.25
         planeImg = pygame.image.load("droneUp.png")
-    elif 10 > pY or pressed[pygame.K_w] == 0 and acc < 3:
+    elif 10 > pY or pressed[pygame.K_w] == 0 and acc < 3 and speedCD <= 360:
         acc += 0.25
         planeImg = pygame.image.load("drone.png")
+
+    if speedCD <= 360:
+        forwardSpeed = 5
+    else:
+        forwardSpeed = superSpeed
+        planeImg = pygame.image.load("DroneSuperSpeed.png")
 
     pY += acc
 
