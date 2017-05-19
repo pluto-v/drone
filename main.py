@@ -8,6 +8,8 @@ import math
 '''
 TO DO LIST:
 - add enemies
+    - HP (somewhat done, needs graphical effect)
+    - shooting
 - moving landscape (done)
 - maybe high score stuff
 
@@ -15,6 +17,10 @@ BUG LIST (add to this if you discover one):
 - bullet will sometimes not explode at the far bottom right of screen
 - enemy dissapears off screen (DONE)
 
+CONTROLS:
+w to fly up
+Click to shoot (may not work with mousepad - try a mouse)
+Spacebar to speed boost (might not be kept in final version of game, has a cooldown)
 '''
 
 # initiate pygame
@@ -72,9 +78,11 @@ eBulTarX = [-50]
 eBulTarY = [-50]
 eBulOrgX = [-50]
 eBulOrgY = [-50]
+enemyHP = [2]
 for i in range (4):  # max 4 enemies at once
     enemyX.append(-100)
     enemyY.append(100)
+    enemyHP.append(2)
 for i in range(10):  # max 10 enemy bullets at once
     eBulX.append(-50)
     eBulY.append(-50)
@@ -175,6 +183,7 @@ while True:
             else:
                 enemyY[nextEnemy] = disHeight - 90
 
+        enemyHP[nextEnemy] = 2
         enemyX[nextEnemy] = disLength
 
     # move enemies forward
@@ -220,6 +229,9 @@ while True:
                 for j in range(4):
                     if bulX[i] - 45 < enemyX[j] + 20 < bulX[i] + 45 and bulY[i] - 60 < enemyY[j] < bulY[i] + 60:
                         print("it hit!", j)
+                        enemyHP[j] -= 1
+                        if enemyHP[j] <= 0:
+                            enemyX[j] = - 100
 
     # updates display
     pygame.display.update()
