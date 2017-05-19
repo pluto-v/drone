@@ -12,6 +12,7 @@ TO DO LIST:
     - shooting
 - moving landscape (done)
 - maybe high score stuff
+- fix hitboxes
 
 BUG LIST (add to this if you discover one):
 - bullet will sometimes not explode at the far bottom right of screen
@@ -70,6 +71,9 @@ landX = 10
 
 # intialize enemies
 enemyImg = pygame.image.load("enemy.png")
+enemyDmgImg = pygame.image.load("enemyDmg.png")
+enemyDeadImg = pygame.image.load("enemyDead.png")
+maxHP = 2  # def 2
 enemyX = [-100]
 enemyY = [100]
 eBulX = [-100]
@@ -78,11 +82,11 @@ eBulTarX = [-50]
 eBulTarY = [-50]
 eBulOrgX = [-50]
 eBulOrgY = [-50]
-enemyHP = [2]
+enemyHP = [maxHP]
 for i in range (4):  # max 4 enemies at once
     enemyX.append(-100)
     enemyY.append(100)
-    enemyHP.append(2)
+    enemyHP.append(maxHP)
 for i in range(10):  # max 10 enemy bullets at once
     eBulX.append(-50)
     eBulY.append(-50)
@@ -106,9 +110,8 @@ while True:
     # moving plane, accelerates instead of instant movement for more smoothness
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_SPACE] == 1 and speedCD <= 0:
-        acc = 0
         speedCD = 420
-
+    # fly up and down
     elif pressed[pygame.K_w] == 1 and acc > -3 and 10 < pY and speedCD <= 360:
         acc += - 0.25
         planeImg = pygame.image.load("droneUp.png")
@@ -116,10 +119,12 @@ while True:
         acc += 0.25
         planeImg = pygame.image.load("drone.png")
 
+    # SPEED BOOOST
     if speedCD <= 360:
         forwardSpeed = 5
     else:
         forwardSpeed = superSpeed
+        acc = 0
         planeImg = pygame.image.load("DroneSuperSpeed.png")
 
     pY += acc
@@ -129,7 +134,7 @@ while True:
 
     # shooting
     mouse = pygame.mouse.get_pressed()
-    if mouse[0] == 1 and reload <= 0:
+    if mouse[0] == 1 and reload <= 0 and forwardSpeed != superSpeed:
         # get mouse position
         curBul += 1
         if curBul > 3:
@@ -183,14 +188,19 @@ while True:
             else:
                 enemyY[nextEnemy] = disHeight - 90
 
-        enemyHP[nextEnemy] = 2
+        enemyHP[nextEnemy] = maxHP
         enemyX[nextEnemy] = disLength
 
     # move enemies forward
     for i in range(4):
         if enemyX[i] > -70:
             enemyX[i] -= forwardSpeed
-            screen.blit(enemyImg, (enemyX[i], enemyY[i]))
+            if enemyHP[i] <= 0:
+                screen.blit(enemyDeadImg, (enemyX[i], enemyY[i]))
+            elif enemyHP[i] <= maxHP / 2:
+                screen.blit(enemyDmgImg, (enemyX[i], enemyY[i]))
+            else:
+                screen.blit(enemyImg, (enemyX[i], enemyY[i]))
 
     # checking for ground collision, has to be here due it checking colour, if we find a diff way move it back
     colour = screen.get_at((int(pX + 40), int(pY + 30)))
@@ -228,10 +238,7 @@ while True:
                 # do dmg to enemies
                 for j in range(4):
                     if bulX[i] - 45 < enemyX[j] + 20 < bulX[i] + 45 and bulY[i] - 60 < enemyY[j] < bulY[i] + 60:
-                        print("it hit!", j)
                         enemyHP[j] -= 1
-                        if enemyHP[j] <= 0:
-                            enemyX[j] = - 100
 
     # updates display
     pygame.display.update()
