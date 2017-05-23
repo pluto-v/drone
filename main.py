@@ -8,11 +8,11 @@ import math
 '''
 TO DO LIST:
 - add enemies
-    - HP (somewhat done, needs graphical effect)
+    - HP (done)
     - shooting
 - moving landscape (done)
 - maybe high score stuff
-- fix hitboxes
+- fix hitboxes (pfft its fine)
 
 BUG LIST (add to this if you discover one):
 - bullet will sometimes not explode at the far bottom right of screen
@@ -74,6 +74,7 @@ landX = 10
 enemyImg = pygame.image.load("enemy.png")
 enemyDmgImg = pygame.image.load("enemyDmg.png")
 enemyDeadImg = pygame.image.load("enemyDead.png")
+enemyBulImg = pygame.image.load("enemyBullet.png")
 maxHP = 2  # def 2
 enemyX = [-100]
 enemyY = [100]
@@ -207,13 +208,18 @@ while True:
                 screen.blit(enemyImg, (enemyX[i], enemyY[i]))
 
             # SHOOTING FOR ENEMY
-            if eCD <= 0 and random.randint(1,60) == 1 and enemyHP[i] > 0:
-                eCD = 40
+            if eCD <= 0 and random.randint(1,30) == 1 and enemyHP[i] > 0:
+                eCD = 100
                 eNextBul += 1
                 if eNextBul > 10:
                     eNextBul = 0
-                eBulX[eNextBul] = enemyX[i]
-                eBulY[eNextBul] = enemyY[i]
+                eBulX[eNextBul] = enemyX[i] + 15
+                eBulY[eNextBul] = enemyY[i] + 5
+
+                eBulTarX[eNextBul] = pX + 25
+                eBulTarY[eNextBul] = pY + 15
+                eBulOrgX[eNextBul] = enemyX[i] + 15
+                eBulOrgY[eNextBul] = enemyY[i] + 5
 
     # checking for ground collision, has to be here due it checking colour, if we find a diff way move it back
     colour = screen.get_at((int(pX + 40), int(pY + 30)))
@@ -255,11 +261,20 @@ while True:
                     if bulX[i] - 45 < enemyX[j] + 25 < bulX[i] + 45 and bulY[i] - 60 < enemyY[j] + 10 < bulY[i] + 60:
                         enemyHP[j] -= 1
 
-    # moving and displaying enemy bullets
+    # moving and displaying enemy bullets that are in the air
     for i in range(10):
-        if eBulX[i] > 0 and eBulY[i] > 0:
-            print("LUL", eNextBul)
-            eBulX[i] = - 10
+        if eBulX[i] < -20 or eBulY[i] < -20:
+            eBulX[i] = - 50
+
+        elif eBulX[i] > 0 and eBulY[i] > 0:
+            bulSpeed = math.sqrt(((eBulTarX[i] - eBulOrgX[i]) ** 2) + ((eBulTarY[i] - eBulOrgY[i]) ** 2))
+            ratio = 6 / bulSpeed
+            travelX = (eBulTarX[i] - eBulOrgX[i]) * ratio
+            travelY = (eBulTarY[i] - eBulOrgY[i]) * ratio
+            eBulX[i] += travelX
+            eBulY[i] += travelY
+
+            screen.blit(enemyBulImg, (eBulX[i], eBulY[i]))
 
     # updates display
     pygame.display.update()
