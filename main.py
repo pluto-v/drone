@@ -248,7 +248,7 @@ while True:
 
         # if bullet hits ground or enemy
         # 255,82,85,255 is colour of enemy
-        elif disLength - 1 > bulX[i] > 0 and disHeight - 1 > bulY[i] > 0:
+        elif disLength - 1 > bulX[i] > 6 and disHeight - 1 > bulY[i] > 6:
             colour = screen.get_at((int(bulX[i]), int(bulY[i])))
             colour2 = screen.get_at((int(bulX[i] - 6), int(bulY[i] + 8)))
             if colour == (168,224,101,255) or colour == (255,82,85,255) or\
@@ -273,7 +273,8 @@ while True:
             travelY = (eBulTarY[i] - eBulOrgY[i]) * ratio
             eBulX[i] += travelX
             eBulY[i] += travelY
-
+            if speedCD > 360:
+                eBulX[i] -= (forwardSpeed - 5)
             screen.blit(enemyBulImg, (eBulX[i], eBulY[i]))
 
     # updates display
