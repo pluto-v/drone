@@ -39,7 +39,7 @@ sky = (70,110,220)
 
 # initialize plane
 crashed = False
-planeImg = pygame.image.load("drone.png")
+planeImg = pygame.image.load("data/drone.png")
 pX = 25
 pY = 50
 acc = 0
@@ -50,8 +50,8 @@ speedCD = 0
 superSpeed = 10
 
 # initialize bullets
-expImg = pygame.image.load("explode.png")
-bulImg = pygame.image.load("bullet.png")
+expImg = pygame.image.load("data/explode.png")
+bulImg = pygame.image.load("data/bullet.png")
 bulX = [-50, -50, -50, -50]
 bulY = [-50, -50, -50, -50]
 bulTarX = [-50, -50, -50, -50]
@@ -66,14 +66,14 @@ curBul = 0
 
 
 # initialize land/obstacles
-landImg = pygame.image.load("land.png")
+landImg = pygame.image.load("data/land.png")
 landX = 10
 
 # intialize enemies
-enemyImg = pygame.image.load("enemy.png")
-enemyDmgImg = pygame.image.load("enemyDmg.png")
-enemyDeadImg = pygame.image.load("enemyDead.png")
-enemyBulImg = pygame.image.load("enemyBullet.png")
+enemyImg = pygame.image.load("data/enemy.png")
+enemyDmgImg = pygame.image.load("data/enemyDmg.png")
+enemyDeadImg = pygame.image.load("data/enemyDead.png")
+enemyBulImg = pygame.image.load("data/enemyBullet.png")
 maxHP = 2  # def 2
 enemyX = [-100]
 enemyY = [100]
@@ -118,10 +118,10 @@ while True:
     # fly up and down
     elif pressed[pygame.K_w] == 1 and acc > -3 and 10 < pY and speedCD <= 360:
         acc += - 0.25
-        planeImg = pygame.image.load("droneUp.png")
+        planeImg = pygame.image.load("data/droneUp.png")
     elif 10 > pY or pressed[pygame.K_w] == 0 and acc < 3 and speedCD <= 360:
         acc += 0.25
-        planeImg = pygame.image.load("drone.png")
+        planeImg = pygame.image.load("data/drone.png")
 
     # SPEED BOOOST
     if speedCD <= 360:
@@ -129,7 +129,7 @@ while True:
     else:
         forwardSpeed = superSpeed
         acc = 0
-        planeImg = pygame.image.load("DroneSuperSpeed.png")
+        planeImg = pygame.image.load("data/DroneSuperSpeed.png")
 
     pY += acc
 

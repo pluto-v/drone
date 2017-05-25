@@ -1,1 +1,1 @@
-pyg.exe main.py
+data\pyg.exe data\main.py
