@@ -1,7 +1,6 @@
 import pygame
 import sys
 import random
-import pyganim
 import time
 import math
 
@@ -16,7 +15,7 @@ TO DO LIST:
 
 BUG LIST (add to this if you discover one):
 - bullet will sometimes not explode at the far bottom right of screen
-- enemy dissapears off screen (DONE)
+- when running .exe bullets dont hit anything NOTLIKETHIS
 
 CONTROLS:
 w to fly up
@@ -187,7 +186,7 @@ while True:
 
         for i in range(6):
             colour = screen.get_at((disLength - 10, disHeight - 120 + i * 15))
-            if colour == (168,224,101,255):
+            if colour == (167,223,100,255):
                 enemyY[nextEnemy] = disHeight - 175 + i * 15
                 break
             else:
@@ -216,15 +215,15 @@ while True:
                 eBulX[eNextBul] = enemyX[i] + 15
                 eBulY[eNextBul] = enemyY[i] + 5
 
-                eBulTarX[eNextBul] = pX + 25
                 eBulTarY[eNextBul] = pY + 15
+                eBulTarX[eNextBul] = pX + 120 + (eBulTarY[eNextBul] / 4)
                 eBulOrgX[eNextBul] = enemyX[i] + 15
                 eBulOrgY[eNextBul] = enemyY[i] + 5
 
     # checking for ground collision, has to be here due it checking colour, if we find a diff way move it back
     colour = screen.get_at((int(pX + 40), int(pY + 30)))
     # colour of most of ground (green part): (168, 224, 101, 255) RGBA
-    if pY >= disHeight - 51 or colour == (168,224,101,255) or colour == (255,82,85,255):
+    if pY >= disHeight - 51 or colour == (167,223,100,255) or colour == (254,81,84,255):
         # CRASH
         # pY = disHeight - 75
         # acc = 0
@@ -248,11 +247,11 @@ while True:
 
         # if bullet hits ground or enemy
         # 255,82,85,255 is colour of enemy
-        elif disLength - 1 > bulX[i] > 6 and disHeight - 1 > bulY[i] > 6:
+        elif disLength - 1 > bulX[i] > 6 and disHeight - 9 > bulY[i] > 9:
             colour = screen.get_at((int(bulX[i]), int(bulY[i])))
-            colour2 = screen.get_at((int(bulX[i] - 6), int(bulY[i] + 8)))
-            if colour == (168,224,101,255) or colour == (255,82,85,255) or\
-                            colour2 == (168,224,101,255) or colour2 == (255,82,85,255):
+            colour2 = screen.get_at((int(bulX[i] - 2), int(bulY[i] + 8)))
+            if colour == (167,223,100,255) or colour == (254,81,84,255) or\
+                            colour2 == (167,223,100,255) or colour2 == (254,81,84,255):
                 bulTarX[i] = bulX[i]
                 bulExploded[i] = True
 
@@ -268,13 +267,20 @@ while True:
 
         elif eBulX[i] > 0 and eBulY[i] > 0:
             bulSpeed = math.sqrt(((eBulTarX[i] - eBulOrgX[i]) ** 2) + ((eBulTarY[i] - eBulOrgY[i]) ** 2))
-            ratio = 6 / bulSpeed
+            ratio = 5 / bulSpeed
             travelX = (eBulTarX[i] - eBulOrgX[i]) * ratio
             travelY = (eBulTarY[i] - eBulOrgY[i]) * ratio
-            eBulX[i] += travelX
+            eBulX[i] += travelX - 3  # - 3 for smoother movement
             eBulY[i] += travelY
             if speedCD > 360:
                 eBulX[i] -= (forwardSpeed - 5)
+            if pY + 5 < eBulY[i] < pY + 30 and pX + 10 < eBulX[i] < pX + 75:
+                time.sleep(0.5)
+                screen.fill((200, 0, 0))
+                pygame.display.update()
+                print("YOU GOT HIT")
+                time.sleep(1)
+                sys.exit()
             screen.blit(enemyBulImg, (eBulX[i], eBulY[i]))
 
     # updates display
