@@ -67,7 +67,7 @@ curBul = 0
 
 # initialize land/obstacles
 landImg = pygame.image.load("data/land.png")
-landX = 10
+landX = 0
 
 # intialize enemies
 enemyImg = pygame.image.load("data/enemy.png")
@@ -174,7 +174,7 @@ while True:
     if landX < -2550:
         landX = -10
 
-    screen.blit(landImg, (landX, disHeight - 160))
+    screen.blit(landImg, (landX, disHeight - 170))
 
 
     # SPAWN ENEMIES
@@ -185,12 +185,12 @@ while True:
             nextEnemy = 0
 
         for i in range(6):
-            colour = screen.get_at((disLength - 10, disHeight - 120 + i * 15))
+            colour = screen.get_at((disLength - 5, disHeight - 110 + i * 10))
             if colour == (167,223,100,255):
-                enemyY[nextEnemy] = disHeight - 175 + i * 15
+                enemyY[nextEnemy] = disHeight - 170 + i * 10
                 break
             else:
-                enemyY[nextEnemy] = disHeight - 90
+                enemyY[nextEnemy] = disHeight - 100
 
         enemyHP[nextEnemy] = maxHP
         enemyX[nextEnemy] = disLength
