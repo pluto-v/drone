@@ -16,6 +16,7 @@ TO DO LIST:
 BUG LIST (add to this if you discover one):
 - bullet will sometimes not explode at the far bottom right of screen
 - when running .exe bullets dont hit anything NOTLIKETHIS
+- enemies cant hit you if your high up
 
 CONTROLS:
 w to fly up
@@ -25,8 +26,9 @@ Spacebar to speed boost (might not be kept in final version of game, has a coold
 
 # initiate pygame
 pygame.init()
+pygame.font.init()
 
-# initialize random stuff (e.g. colours)
+# initialize random stuff()
 disLength = 800
 disHeight = 400
 screen = pygame.display.set_mode((disLength,disHeight))
@@ -34,7 +36,11 @@ screen = pygame.display.set_mode((disLength,disHeight))
 pygame.display.set_caption("drone")
 clock = pygame.time.Clock()
 
-# colours
+# score and colours
+score = 0
+scoreTimer = 0
+scoreFont = pygame.font.SysFont('Courier New', 20)
+
 sky = (70,110,220)
 
 # initialize plane
@@ -86,6 +92,7 @@ eBulOrgY = [-50]
 eNextBul = 0
 enemyHP = [maxHP]
 eCD = 0
+bossMode = False
 for i in range (4):  # max 4 enemies at once
     enemyX.append(-100)
     enemyY.append(100)
@@ -107,9 +114,14 @@ while True:
 
     # counting down timers
     reload += -1
-    enemyTimer += -1
+    if bossMode == False:
+        enemyTimer += -1
     speedCD += -1
     eCD += -1
+    scoreTimer -= forwardSpeed
+    if scoreTimer <= 0:
+        scoreTimer = 100
+        score += 1
 
     # moving plane, accelerates instead of instant movement for more smoothness
     pressed = pygame.key.get_pressed()
@@ -188,6 +200,7 @@ while True:
             colour = screen.get_at((disLength - 5, disHeight - 110 + i * 10))
             if colour == (167,223,100,255):
                 enemyY[nextEnemy] = disHeight - 170 + i * 10
+
                 break
             else:
                 enemyY[nextEnemy] = disHeight - 100
@@ -259,6 +272,8 @@ while True:
                 for j in range(4):
                     if bulX[i] - 45 < enemyX[j] + 25 < bulX[i] + 45 and bulY[i] - 60 < enemyY[j] + 10 < bulY[i] + 60:
                         enemyHP[j] -= 1
+                        if enemyHP[j] == 0:
+                            score += 20
 
     # moving and displaying enemy bullets that are in the air
     for i in range(10):
@@ -283,6 +298,11 @@ while True:
                 sys.exit()
             screen.blit(enemyBulImg, (eBulX[i], eBulY[i]))
 
+    # SCORES
+    scoreText = str(score)
+    textSurface = scoreFont.render(scoreText, False, (0, 0, 0))
+    screen.blit(textSurface, (disLength - 120, 10))
+
     # updates display
     pygame.display.update()
 
@@ -295,4 +315,5 @@ while True:
 
 pygame.quit()
 quit()
+
 
