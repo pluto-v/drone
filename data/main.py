@@ -301,7 +301,7 @@ while True:
                 eBulX[i] -= (forwardSpeed - 5)
 
             # hitting the player
-            if pY + 5 < eBulY[i] < pY + 30 and pX + 25 < eBulX[i] < pX + 90:
+            if pY + 5 < eBulY[i] < pY + 30 and pX + 25 < eBulX[i] < pX + 100:
                 time.sleep(0.5)
                 screen.fill((200, 0, 0))
                 pygame.display.update()
