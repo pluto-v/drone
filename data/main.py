@@ -88,6 +88,7 @@ eNextBul = 0
 enemyHP = [maxHP]
 eCD = 0
 bossMode = False
+bossAcc = 0
 for i in range (4):  # max 4 enemies at once
     enemyX.append(-100)
     enemyY.append(100)
@@ -122,7 +123,7 @@ while True:
     if pressed[pygame.K_SPACE] == 1 and fuel > 1:
         boosted = True
         fuel += -2
-        delay = 30
+        delay = 45
     # fly up and down
     elif pressed[pygame.K_w] == 1 and acc > -3 and 10 < pY:
         acc += - 0.25
@@ -208,17 +209,53 @@ while True:
             colour = screen.get_at((disLength - 5, disHeight - 110 + i * 10))
             if colour == (167,223,100,255):
                 enemyY[nextEnemy] = disHeight - 170 + i * 10
-
                 break
             else:
                 enemyY[nextEnemy] = disHeight - 100
 
-        enemyHP[nextEnemy] = maxHP
+        if random.randint(0,5) == 1:  # 1/30 chance of a boss
+            bossMode = True
+            enemyHP[nextEnemy] = 15
+            enemyY[nextEnemy] = disHeight - 140
+        else:
+            bossMode = False
+            enemyHP[nextEnemy] = maxHP
         enemyX[nextEnemy] = disLength
 
     # move enemies forward
     for i in range(4):
-        if enemyX[i] > -70:
+        # YES BOSS
+        if bossMode:
+            if enemyX[i] > 550:
+                enemyX[i] += -2
+            elif enemyX[i] < 520:
+                enemyX[i] += - forwardSpeed
+            else:
+                if enemyY[i] >= disHeight - 150:
+                    bossAcc = -1
+                elif enemyY[i] <= 50:
+                    bossAcc = 1
+            enemyY[i] += bossAcc
+
+            screen.blit(enemyImg, (enemyX[i], enemyY[i]))
+
+            # SHOOTING FOR ENEMY
+            if eCD <= 0 and random.randint(1, 10) == 1 and enemyHP[i] > 0 and enemyX[i] > 75:
+                eCD = 150
+                for j in range(3):
+                    eNextBul += 1
+                    if eNextBul > 10:
+                        eNextBul = 0
+                    eBulX[eNextBul] = enemyX[i] + 15
+                    eBulY[eNextBul] = enemyY[i] + 5
+
+                    eBulTarY[eNextBul] = pY - 85 + (j*100)
+                    eBulTarX[eNextBul] = pX + 300 - pY
+                    eBulOrgX[eNextBul] = enemyX[i] + 15
+                    eBulOrgY[eNextBul] = enemyY[i] + 5
+
+        # NO BOSS
+        elif enemyX[i] > -70:
             enemyX[i] -= forwardSpeed
             if enemyHP[i] <= 0:
                 screen.blit(enemyDeadImg, (enemyX[i], enemyY[i]))
@@ -315,8 +352,8 @@ while True:
     screen.blit(textSurface, (disLength - 140, 10))
 
     # Draw fuel
-    pygame.draw.rect(screen, (250, 100, 100), (disLength - 40, 40, 30, fuel / 4), 0)
-    pygame.draw.rect(screen, (0,0,0), (disLength - 40, 40, 30, 50), 4)
+    pygame.draw.rect(screen, (250, 100, 100), (disLength - 40, 40, 20, fuel / 2), 0)
+    pygame.draw.rect(screen, (0,0,0), (disLength - 40, 40, 20, 100), 4)
 
     # updates display
     pygame.display.update()
