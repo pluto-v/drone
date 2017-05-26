@@ -6,17 +6,9 @@ import math
 
 '''
 TO DO LIST:
-- add enemies
-    - HP (done)
-    - shooting
-- moving landscape (done)
-- maybe high score stuff
-- fix hitboxes (pfft its fine)
-
-BUG LIST (add to this if you discover one):
-- bullet will sometimes not explode at the far bottom right of screen
-- when running .exe bullets dont hit anything NOTLIKETHIS
-- enemies cant hit you if your high up
+- add rare boss
+- music
+- sound effects
 
 CONTROLS:
 w to fly up
@@ -39,9 +31,10 @@ clock = pygame.time.Clock()
 # score and colours
 score = 0
 scoreTimer = 0
+scoreMaxTimer = 20  # delay between giving score, in game ticks (60 = 1sec)
 scoreFont = pygame.font.SysFont('Courier New', 20)
 
-sky = (70,110,220)
+sky = (100,150,250)
 
 # initialize plane
 crashed = False
@@ -52,8 +45,10 @@ acc = 0
 forwardSpeed = 5  # def 5
 
 # SPEEDDDD BOOOSSTT
-speedCD = 0
+boosted = False
 superSpeed = 10
+fuel = 200  # max 200
+delay = 10
 
 # initialize bullets
 expImg = pygame.image.load("data/explode.png")
@@ -116,27 +111,40 @@ while True:
     reload += -1
     if bossMode == False:
         enemyTimer += -1
-    speedCD += -1
     eCD += -1
-    scoreTimer -= forwardSpeed
+    scoreTimer += -1
     if scoreTimer <= 0:
-        scoreTimer = 100
+        scoreTimer = scoreMaxTimer
         score += 1
 
     # moving plane, accelerates instead of instant movement for more smoothness
     pressed = pygame.key.get_pressed()
-    if pressed[pygame.K_SPACE] == 1 and speedCD <= 0:
-        speedCD = 420
+    if pressed[pygame.K_SPACE] == 1 and fuel > 1:
+        boosted = True
+        fuel += -2
+        delay = 30
     # fly up and down
-    elif pressed[pygame.K_w] == 1 and acc > -3 and 10 < pY and speedCD <= 360:
+    elif pressed[pygame.K_w] == 1 and acc > -3 and 10 < pY:
         acc += - 0.25
         planeImg = pygame.image.load("data/droneUp.png")
-    elif 10 > pY or pressed[pygame.K_w] == 0 and acc < 3 and speedCD <= 360:
+        boosted = False
+        # refuel
+        if fuel < 200 and delay <= 0:
+            fuel += 1
+        else:
+            delay += - 1
+    elif 10 > pY or pressed[pygame.K_w] == 0 and acc < 3:
         acc += 0.25
         planeImg = pygame.image.load("data/drone.png")
+        boosted = False
+        # refuel
+        if fuel < 200 and delay <= 0:
+            fuel += 1
+        else:
+            delay += - 1
 
     # SPEED BOOOST
-    if speedCD <= 360:
+    if not boosted:
         forwardSpeed = 5
     else:
         forwardSpeed = superSpeed
@@ -220,7 +228,7 @@ while True:
                 screen.blit(enemyImg, (enemyX[i], enemyY[i]))
 
             # SHOOTING FOR ENEMY
-            if eCD <= 0 and random.randint(1,30) == 1 and enemyHP[i] > 0:
+            if eCD <= 0 and random.randint(1,30) == 1 and enemyHP[i] > 0 and enemyX[i] > 75:
                 eCD = 100
                 eNextBul += 1
                 if eNextBul > 10:
@@ -229,7 +237,7 @@ while True:
                 eBulY[eNextBul] = enemyY[i] + 5
 
                 eBulTarY[eNextBul] = pY + 15
-                eBulTarX[eNextBul] = pX + 120 + (eBulTarY[eNextBul] / 4)
+                eBulTarX[eNextBul] = pX + 300 - pY
                 eBulOrgX[eNextBul] = enemyX[i] + 15
                 eBulOrgY[eNextBul] = enemyY[i] + 5
 
@@ -285,23 +293,30 @@ while True:
             ratio = 5 / bulSpeed
             travelX = (eBulTarX[i] - eBulOrgX[i]) * ratio
             travelY = (eBulTarY[i] - eBulOrgY[i]) * ratio
-            eBulX[i] += travelX - 3  # - 3 for smoother movement
+            eBulX[i] += travelX - 3  # - 3 cuz plane is flying for
             eBulY[i] += travelY
-            if speedCD > 360:
+
+            # if speed boost is activated
+            if boosted:
                 eBulX[i] -= (forwardSpeed - 5)
-            if pY + 5 < eBulY[i] < pY + 30 and pX + 10 < eBulX[i] < pX + 75:
+
+            # hitting the player
+            if pY + 5 < eBulY[i] < pY + 30 and pX + 25 < eBulX[i] < pX + 90:
                 time.sleep(0.5)
                 screen.fill((200, 0, 0))
                 pygame.display.update()
-                print("YOU GOT HIT")
                 time.sleep(1)
                 sys.exit()
             screen.blit(enemyBulImg, (eBulX[i], eBulY[i]))
 
     # SCORES
     scoreText = str(score)
-    textSurface = scoreFont.render(scoreText, False, (0, 0, 0))
-    screen.blit(textSurface, (disLength - 120, 10))
+    textSurface = scoreFont.render(("score:"+ scoreText), False, (0, 0, 0))
+    screen.blit(textSurface, (disLength - 140, 10))
+
+    # Draw fuel
+    pygame.draw.rect(screen, (250, 100, 100), (disLength - 40, 40, 30, fuel / 4), 0)
+    pygame.draw.rect(screen, (0,0,0), (disLength - 40, 40, 30, 50), 4)
 
     # updates display
     pygame.display.update()
