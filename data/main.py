@@ -104,7 +104,6 @@ for i in range(10):  # max 10 enemy bullets at once
 enemyTimer = random.randint(10,50)
 nextEnemy = 0
 
-
 while True:
     screen.fill(sky)
 
@@ -115,6 +114,7 @@ while True:
     eCD += -1
     scoreTimer += -1
     if scoreTimer <= 0:
+
         scoreTimer = scoreMaxTimer
         score += 1
 
