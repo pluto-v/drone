@@ -87,8 +87,10 @@ eBulOrgY = [-50]
 eNextBul = 0
 enemyHP = [maxHP]
 eCD = 0
+
 bossMode = False
 bossAcc = 0
+bossSpawn = 0
 for i in range (4):  # max 4 enemies at once
     enemyX.append(-100)
     enemyY.append(100)
@@ -199,7 +201,7 @@ while True:
 
 
     # SPAWN ENEMIES
-    if enemyTimer <= 0:
+    if enemyTimer <= 0 and not bossMode:
         enemyTimer = random.randint(80,160)  # def 80 - 160
         nextEnemy += 1
         if nextEnemy > 3:
@@ -213,35 +215,46 @@ while True:
             else:
                 enemyY[nextEnemy] = disHeight - 100
 
-        if random.randint(0,5) == 1:  # 1/30 chance of a boss
+        if random.randint(0,25) + bossSpawn >= 10:
             bossMode = True
-            enemyHP[nextEnemy] = 15
+            bossSpawn = 0
+            enemyHP[nextEnemy] = 5
             enemyY[nextEnemy] = disHeight - 140
         else:
             bossMode = False
             enemyHP[nextEnemy] = maxHP
+            bossSpawn += 1  # boss gets more common
         enemyX[nextEnemy] = disLength
 
-    # move enemies forward
+    # move boss forward
     for i in range(4):
         # YES BOSS
         if bossMode:
-            if enemyX[i] > 550:
+            # moving boss
+            if enemyX[i] > disLength - 200:
                 enemyX[i] += -2
-            elif enemyX[i] < 520:
-                enemyX[i] += - forwardSpeed
             else:
                 if enemyY[i] >= disHeight - 150:
                     bossAcc = -1
                 elif enemyY[i] <= 50:
                     bossAcc = 1
-            enemyY[i] += bossAcc
+
+                # enemy death
+                if enemyHP[i] <= 0:
+                    if enemyY[i] < disHeight - 100:
+                        enemyY[i] += 3
+                    enemyX[i] += - 3
+                    if enemyX[i] <= -60:
+                        bossMode = False
+
+            if enemyX[i] < disLength - 240:
+                enemyX[i] += - forwardSpeed
 
             screen.blit(enemyImg, (enemyX[i], enemyY[i]))
 
-            # SHOOTING FOR ENEMY
-            if eCD <= 0 and random.randint(1, 10) == 1 and enemyHP[i] > 0 and enemyX[i] > 75:
-                eCD = 150
+            # SHOOTING FOR BOSS
+            if eCD <= 0 and random.randint(1, 10) == 1 and enemyHP[i] > 0 and enemyX > disLength - 240:
+                eCD = 100
                 for j in range(3):
                     eNextBul += 1
                     if eNextBul > 10:
@@ -254,7 +267,7 @@ while True:
                     eBulOrgX[eNextBul] = enemyX[i] + 15
                     eBulOrgY[eNextBul] = enemyY[i] + 5
 
-        # NO BOSS
+        # NO BOSS, MOVE ENEMIES FORWARD
         elif enemyX[i] > -70:
             enemyX[i] -= forwardSpeed
             if enemyHP[i] <= 0:
@@ -266,7 +279,7 @@ while True:
 
             # SHOOTING FOR ENEMY
             if eCD <= 0 and random.randint(1,30) == 1 and enemyHP[i] > 0 and enemyX[i] > 75:
-                eCD = 100
+                eCD = 80
                 eNextBul += 1
                 if eNextBul > 10:
                     eNextBul = 0
@@ -319,6 +332,9 @@ while True:
                         enemyHP[j] -= 1
                         if enemyHP[j] == 0:
                             score += 20
+                            # bonus score in boss mode
+                            if bossMode:
+                                score += 130
 
     # moving and displaying enemy bullets that are in the air
     for i in range(10):
