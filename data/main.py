@@ -6,8 +6,6 @@ import math
 
 '''
 TO DO LIST:
-- splash screen
-- replay button
 - music
 - sound effects
 
@@ -41,7 +39,7 @@ while True:
         screen.blit(splashScreen, (0, 0))
 
         pressed = pygame.key.get_pressed()
-        if pressed[pygame.K_SPACE]:
+        if pressed[pygame.K_w]:
             dead = False
             break
         elif pressed[pygame.K_ESCAPE]:
@@ -133,6 +131,8 @@ while True:
     enemyTimer = random.randint(10,50)
     nextEnemy = 0
 
+    # =========== MAIN PROGRAM ============= #
+
     while not dead:
         screen.fill(sky)
 
@@ -184,7 +184,8 @@ while True:
 
         # shooting
         mouse = pygame.mouse.get_pressed()
-        if mouse[0] == 1 and reload <= 0 and forwardSpeed != superSpeed:
+        if mouse[0] == 1 and reload <= 0 and forwardSpeed != superSpeed or\
+                                        mouse[2] == 1 and reload <= 0 and forwardSpeed != superSpeed and fuel >= 20:
             # get mouse position
             curBul += 1
             if curBul > 3:
@@ -197,9 +198,14 @@ while True:
             bulOrgX[curBul] = bulX[curBul]
             bulOrgY[curBul] = bulY[curBul]
             bulExploded[curBul] = False
-            # test if it works
-            # pygame.draw.rect(screen, (255,255,255), (mouseX - 10, mouseY - 10, 20, 20), 0)
+
             reload = maxReload
+            # right click speed attack
+            if mouse[2] == 1:
+                reload = maxReload / 3
+                fuel += - 20
+                delay = 60
+
 
         # if bullet is in air
         for i in range(4):
@@ -245,6 +251,9 @@ while True:
                 enemyHP[nextEnemy] = 20
                 enemyX[nextEnemy] = disLength + 25
                 enemyY[nextEnemy] = disHeight - 169
+                # boss music!
+                pygame.mixer.music.load('data/backgroundMusic.mp3')
+                pygame.mixer.music.play(-1)
             # spawn normal enemy
             else:
                 enemyBoss[nextEnemy] = False
@@ -273,6 +282,7 @@ while True:
                             enemyY[i] += 3
                         enemyX[i] += - 5
                         if enemyX[i] <= -60:
+                            pygame.mixer.music.stop()
                             enemyBoss[i] = False
 
                 screen.blit(bossImg, (enemyX[i], enemyY[i]))
@@ -287,7 +297,7 @@ while True:
                         eBulX[eNextBul] = enemyX[i] + 15
                         eBulY[eNextBul] = enemyY[i] + 40
 
-                        eBulTarY[eNextBul] = pY - 85 + (j*100)
+                        eBulTarY[eNextBul] = pY - 115 + (j*130)
                         eBulTarX[eNextBul] = pX + 150
                         eBulOrgX[eNextBul] = eBulX[eNextBul]
                         eBulOrgY[eNextBul] = eBulY[eNextBul]
@@ -312,7 +322,7 @@ while True:
                     eBulY[eNextBul] = enemyY[i] + 5
 
                     eBulTarY[eNextBul] = pY + 15
-                    eBulTarX[eNextBul] = pX + 300 - pY
+                    eBulTarX[eNextBul] = pX + 450 - (pY * 2) + (enemyX[i] / 8)
                     eBulOrgX[eNextBul] = enemyX[i] + eBulX[eNextBul]
                     eBulOrgY[eNextBul] = enemyY[i] + eBulY[eNextBul]
 
