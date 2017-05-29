@@ -6,7 +6,8 @@ import math
 
 '''
 TO DO LIST:
-- add rare boss
+- splash screen
+- replay button
 - music
 - sound effects
 
@@ -14,6 +15,9 @@ CONTROLS:
 w to fly up
 Click to shoot (may not work with mousepad - try a mouse)
 Spacebar to speed boost (might not be kept in final version of game, has a cooldown)
+
+KNOWN BUGS:
+
 '''
 
 # initiate pygame
@@ -75,6 +79,7 @@ enemyImg = pygame.image.load("data/enemy.png")
 enemyDmgImg = pygame.image.load("data/enemyDmg.png")
 enemyDeadImg = pygame.image.load("data/enemyDead.png")
 enemyBulImg = pygame.image.load("data/enemyBullet.png")
+bossImg = pygame.image.load("data/bossImage.png")
 maxHP = 2  # def 2
 enemyX = [-100]
 enemyY = [100]
@@ -88,13 +93,15 @@ eNextBul = 0
 enemyHP = [maxHP]
 eCD = 0
 
-bossMode = False
+enemyBoss = [False]
 bossAcc = 0
-bossSpawn = 0
+bossSpawn = 0  # makes boss spawning more common if it doesnt spawn, or vice versa
 for i in range (4):  # max 4 enemies at once
     enemyX.append(-100)
     enemyY.append(100)
     enemyHP.append(maxHP)
+    enemyBoss.append(False)
+
 for i in range(10):  # max 10 enemy bullets at once
     eBulX.append(-50)
     eBulY.append(-50)
@@ -111,7 +118,7 @@ while True:
 
     # counting down timers
     reload += -1
-    if bossMode == False:
+    if True not in enemyBoss:
         enemyTimer += -1
     eCD += -1
     scoreTimer += -1
@@ -125,26 +132,22 @@ while True:
     if pressed[pygame.K_SPACE] == 1 and fuel > 1:
         boosted = True
         fuel += -2
-        delay = 45
+        delay = 60
     # fly up and down
     elif pressed[pygame.K_w] == 1 and acc > -3 and 10 < pY:
         acc += - 0.25
         planeImg = pygame.image.load("data/droneUp.png")
         boosted = False
-        # refuel
-        if fuel < 200 and delay <= 0:
-            fuel += 1
-        else:
-            delay += - 1
     elif 10 > pY or pressed[pygame.K_w] == 0 and acc < 3:
         acc += 0.25
         planeImg = pygame.image.load("data/drone.png")
         boosted = False
-        # refuel
-        if fuel < 200 and delay <= 0:
-            fuel += 1
-        else:
-            delay += - 1
+
+    # refuel
+    if fuel < 200 and delay <= 0:
+        fuel += 0.5
+    else:
+        delay += - 1
 
     # SPEED BOOOST
     if not boosted:
@@ -201,7 +204,7 @@ while True:
 
 
     # SPAWN ENEMIES
-    if enemyTimer <= 0 and not bossMode:
+    if True not in enemyBoss and enemyTimer <= 0:
         enemyTimer = random.randint(80,160)  # def 80 - 160
         nextEnemy += 1
         if nextEnemy > 3:
@@ -215,57 +218,59 @@ while True:
             else:
                 enemyY[nextEnemy] = disHeight - 100
 
-        if random.randint(0,25) + bossSpawn >= 10:
-            bossMode = True
+        # spawning boss
+        if random.randint(0,25) + bossSpawn >= 30:
             bossSpawn = 0
-            enemyHP[nextEnemy] = 5
-            enemyY[nextEnemy] = disHeight - 140
+            enemyBoss[nextEnemy] = True
+            enemyHP[nextEnemy] = 20
+            enemyX[nextEnemy] = disLength + 25
+            enemyY[nextEnemy] = disHeight - 169
+        # spawn normal enemy
         else:
-            bossMode = False
+            enemyBoss[nextEnemy] = False
             enemyHP[nextEnemy] = maxHP
             bossSpawn += 1  # boss gets more common
-        enemyX[nextEnemy] = disLength
+            enemyX[nextEnemy] = disLength
 
-    # move boss forward
+    # Boss logic
     for i in range(4):
+
         # YES BOSS
-        if bossMode:
-            # moving boss
+        if enemyBoss[i]:
+            # moving boss up and down
             if enemyX[i] > disLength - 200:
                 enemyX[i] += -2
             else:
-                if enemyY[i] >= disHeight - 150:
+                if enemyY[i] >= disHeight - 170:
                     bossAcc = -1
                 elif enemyY[i] <= 50:
                     bossAcc = 1
+                enemyY[i] += bossAcc
 
                 # enemy death
                 if enemyHP[i] <= 0:
                     if enemyY[i] < disHeight - 100:
                         enemyY[i] += 3
-                    enemyX[i] += - 3
+                    enemyX[i] += - 5
                     if enemyX[i] <= -60:
-                        bossMode = False
+                        enemyBoss[i] = False
 
-            if enemyX[i] < disLength - 240:
-                enemyX[i] += - forwardSpeed
-
-            screen.blit(enemyImg, (enemyX[i], enemyY[i]))
+            screen.blit(bossImg, (enemyX[i], enemyY[i]))
 
             # SHOOTING FOR BOSS
             if eCD <= 0 and random.randint(1, 10) == 1 and enemyHP[i] > 0 and enemyX > disLength - 240:
-                eCD = 100
+                eCD = 120
                 for j in range(3):
                     eNextBul += 1
                     if eNextBul > 10:
                         eNextBul = 0
                     eBulX[eNextBul] = enemyX[i] + 15
-                    eBulY[eNextBul] = enemyY[i] + 5
+                    eBulY[eNextBul] = enemyY[i] + 40
 
                     eBulTarY[eNextBul] = pY - 85 + (j*100)
-                    eBulTarX[eNextBul] = pX + 300 - pY
-                    eBulOrgX[eNextBul] = enemyX[i] + 15
-                    eBulOrgY[eNextBul] = enemyY[i] + 5
+                    eBulTarX[eNextBul] = pX + 150
+                    eBulOrgX[eNextBul] = eBulX[eNextBul]
+                    eBulOrgY[eNextBul] = eBulY[eNextBul]
 
         # NO BOSS, MOVE ENEMIES FORWARD
         elif enemyX[i] > -70:
@@ -288,8 +293,8 @@ while True:
 
                 eBulTarY[eNextBul] = pY + 15
                 eBulTarX[eNextBul] = pX + 300 - pY
-                eBulOrgX[eNextBul] = enemyX[i] + 15
-                eBulOrgY[eNextBul] = enemyY[i] + 5
+                eBulOrgX[eNextBul] = enemyX[i] + eBulX[eNextBul]
+                eBulOrgY[eNextBul] = enemyY[i] + eBulY[eNextBul]
 
     # checking for ground collision, has to be here due it checking colour, if we find a diff way move it back
     colour = screen.get_at((int(pX + 40), int(pY + 30)))
@@ -333,15 +338,15 @@ while True:
                         if enemyHP[j] == 0:
                             score += 20
                             # bonus score in boss mode
-                            if bossMode:
+                            if enemyBoss[j] == True:
                                 score += 130
 
     # moving and displaying enemy bullets that are in the air
     for i in range(10):
-        if eBulX[i] < -20 or eBulY[i] < -20:
+        if eBulX[i] < -40 or eBulY[i] < -40:
             eBulX[i] = - 50
 
-        elif eBulX[i] > 0 and eBulY[i] > 0:
+        elif eBulX[i] > -20 and eBulY[i] > -20:
             bulSpeed = math.sqrt(((eBulTarX[i] - eBulOrgX[i]) ** 2) + ((eBulTarY[i] - eBulOrgY[i]) ** 2))
             ratio = 5 / bulSpeed
             travelX = (eBulTarX[i] - eBulOrgX[i]) * ratio
