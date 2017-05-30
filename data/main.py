@@ -35,6 +35,8 @@ while True:
     clock = pygame.time.Clock()
 
     # = = = START THE GAME - SPLASH SCREEN = = = #
+    pygame.mixer.music.load("data/titleMusic.mp3")
+    pygame.mixer.music.play(-1)
     while True:
         splashScreen = pygame.image.load("data/splash.png")
         screen.blit(splashScreen, (0, 0))
@@ -42,6 +44,7 @@ while True:
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_w]:
             dead = False
+            pygame.mixer.music.stop()
             break
         elif pressed[pygame.K_ESCAPE]:
             sys.exit()
@@ -51,6 +54,7 @@ while True:
 
         pygame.display.update()
 
+    # =============================================
     # score and colours
     score = 0
     scoreTimer = 0
@@ -248,16 +252,16 @@ while True:
                 enemyX[nextEnemy] = disLength + 25
                 enemyY[nextEnemy] = disHeight - 169
                 # boss music!
-                pygame.mixer.music.load('data/backgroundMusic.mp3')
+                pygame.mixer.music.load('data/bossMusic.mp3')
                 pygame.mixer.music.play(-1)
             # spawn normal enemy
             else:
                 enemyBoss[nextEnemy] = False
                 enemyHP[nextEnemy] = maxHP
-                bossSpawn += 1  # boss gets more common
+                bossSpawn += 5  # boss gets more common
                 enemyX[nextEnemy] = disLength
 
-        # Boss logic
+        # Enemy logic
         for i in range(4):
 
             # YES BOSS
@@ -265,6 +269,9 @@ while True:
                 # moving boss up and down
                 if enemyX[i] > disLength - 200:
                     enemyX[i] += -2
+                    # Boss healthbar
+                    pygame.draw.rect(screen, (250, 25, 25), (enemyX[i], enemyY[i] + 85, enemyHP[i] * 4, 15), 0)
+                    pygame.draw.rect(screen, (0, 0, 0), (enemyX[i], enemyY[i] + 85, 80, 15), 2)
                 else:
                     if enemyY[i] >= disHeight - 170:
                         bossAcc = -1
@@ -280,6 +287,10 @@ while True:
                         if enemyX[i] <= -60:
                             pygame.mixer.music.stop()
                             enemyBoss[i] = False
+                    else:
+                        # Boss healthbar
+                        pygame.draw.rect(screen, (250, 25, 25), (enemyX[i] + 10, enemyY[i] + 85, enemyHP[i] * 4, 15), 0)
+                        pygame.draw.rect(screen, (0, 0, 0), (enemyX[i] + 10, enemyY[i] + 85, 80, 15), 2)
 
                 screen.blit(bossImg, (enemyX[i], enemyY[i]))
 
@@ -394,7 +405,7 @@ while True:
         screen.blit(textSurface, (disLength - 140, 10))
 
         # Draw fuel
-        pygame.draw.rect(screen, (250, 100, 100), (disLength - 40, 40, 20, fuel / 2), 0)
+        pygame.draw.rect(screen, (125, 225, 250), (disLength - 40, 40, 20, fuel / 2), 0)
         pygame.draw.rect(screen, (0,0,0), (disLength - 40, 40, 20, 100), 4)
 
         # updates display
