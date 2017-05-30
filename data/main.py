@@ -23,6 +23,7 @@ pygame.init()
 pygame.font.init()
 
 while True:
+    pygame.mixer.music.stop()
 
     # initialize random stuff()
     dead = False
@@ -86,7 +87,6 @@ while True:
     maxReload = 30  # num ticks before u can shoot again, def 30 (2 shots /sec)
     reload = 0
     curBul = 0
-
 
     # initialize land/obstacles
     landImg = pygame.image.load("data/land.png")
@@ -184,32 +184,28 @@ while True:
 
         # shooting
         mouse = pygame.mouse.get_pressed()
-        if mouse[0] == 1 and reload <= 0 and forwardSpeed != superSpeed or\
-                                        mouse[2] == 1 and reload <= 0 and forwardSpeed != superSpeed and fuel >= 20:
+        if mouse[0] == 1 and reload <= 0 and forwardSpeed != superSpeed:
             # get mouse position
+            mousePos = pygame.mouse.get_pos()
+            reload = maxReload
+
             curBul += 1
             if curBul > 3:
                 curBul = 0
-            mousePos = pygame.mouse.get_pos()
-            bulTarX[curBul] = mousePos[0]
-            bulTarY[curBul] = mousePos[1]
             bulX[curBul] = pX + 80
             bulY[curBul] = pY + 30
             bulOrgX[curBul] = bulX[curBul]
             bulOrgY[curBul] = bulY[curBul]
             bulExploded[curBul] = False
+            bulTarX[curBul] = mousePos[0]
+            bulTarY[curBul] = mousePos[1]
 
             reload = maxReload
-            # right click speed attack
-            if mouse[2] == 1:
-                reload = maxReload / 3
-                fuel += - 20
-                delay = 60
-
 
         # if bullet is in air
         for i in range(4):
-            if bulTarX[i] > -25 and bulTarY[i] > -25 and bulX[i] < disLength + 100 and bulY[i] < disHeight + 100 and bulExploded[i] == False:
+            if bulTarX[i] > -25 and bulTarY[i] > -25 and bulX[i] < disLength + 100 and bulY[i] < disHeight + 100\
+                    and bulExploded[i] == False:
                 bulSpeed = math.sqrt(((bulTarX[i] - bulOrgX[i]) ** 2) + ((bulTarY[i] - bulOrgY[i]) ** 2))
                 ratio = bulMaxSpeed / bulSpeed
                 travelX = (bulTarX[i] - bulOrgX[i]) * ratio
