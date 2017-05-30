@@ -258,7 +258,7 @@ while True:
             else:
                 enemyBoss[nextEnemy] = False
                 enemyHP[nextEnemy] = maxHP
-                bossSpawn += 5  # boss gets more common
+                bossSpawn += 1  # boss gets more common
                 enemyX[nextEnemy] = disLength
 
         # Enemy logic
@@ -270,8 +270,8 @@ while True:
                 if enemyX[i] > disLength - 200:
                     enemyX[i] += -2
                     # Boss healthbar
-                    pygame.draw.rect(screen, (250, 25, 25), (enemyX[i], enemyY[i] + 85, enemyHP[i] * 4, 15), 0)
-                    pygame.draw.rect(screen, (0, 0, 0), (enemyX[i], enemyY[i] + 85, 80, 15), 2)
+                    pygame.draw.rect(screen, (250, 25, 25), (enemyX[i] + 10, enemyY[i] + 85, enemyHP[i] * 4, 15), 0)
+                    pygame.draw.rect(screen, (0, 0, 0), (enemyX[i] + 10, enemyY[i] + 85, 80, 15), 2)
                 else:
                     if enemyY[i] >= disHeight - 170:
                         bossAcc = -1
