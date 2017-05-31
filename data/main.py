@@ -23,8 +23,6 @@ pygame.init()
 pygame.font.init()
 
 while True:
-    pygame.mixer.music.stop()
-
     # initialize random stuff()
     dead = False
     disLength = 800
@@ -44,7 +42,6 @@ while True:
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_w]:
             dead = False
-            pygame.mixer.music.stop()
             break
         elif pressed[pygame.K_ESCAPE]:
             sys.exit()
@@ -137,6 +134,8 @@ while True:
 
     # =========== MAIN PROGRAM ============= #
 
+    pygame.mixer.music.load("data/backgroundMusic.mp3")
+    pygame.mixer.music.play(-1)
     while not dead:
         screen.fill(sky)
 
@@ -285,7 +284,8 @@ while True:
                             enemyY[i] += 3
                         enemyX[i] += - 5
                         if enemyX[i] <= -60:
-                            pygame.mixer.music.stop()
+                            pygame.mixer.music.load("data/backgroundMusic.mp3")
+                            pygame.mixer.music.play(-1)
                             enemyBoss[i] = False
                     else:
                         # Boss healthbar
