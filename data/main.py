@@ -57,6 +57,7 @@ while True:
     scoreTimer = 0
     scoreMaxTimer = 20  # delay between giving score, in game ticks (60 = 1sec)
     scoreFont = pygame.font.SysFont('Courier New', 20)
+    levelFont = pygame.font.SysFont('Courier New', 15)
 
     sky = (100,150,250)
 
@@ -114,7 +115,9 @@ while True:
 
     enemyBoss = [False]
     bossAcc = 0
-    bossSpawn = 0  # makes boss spawning more common if it doesnt spawn, or vice versa
+    bossSpawn = 0 # makes boss spawning more common if it doesnt spawn, or vice versa
+    bossLevel = 0  # increments by one every defeated boss, starts at 0 (displayed as level 1 though)
+    bossMaxHp = 15 + (bossLevel * 5)
     for i in range (4):  # max 4 enemies at once
         enemyX.append(-100)
         enemyY.append(100)
@@ -142,7 +145,7 @@ while True:
         # counting down timers
         reload += -1
         if True not in enemyBoss:
-            enemyTimer += -1
+            enemyTimer += -(forwardSpeed / 5)
         eCD += -1
         scoreTimer += -1
         if scoreTimer <= 0:
@@ -247,7 +250,7 @@ while True:
             if random.randint(0,25) + bossSpawn >= 30:
                 bossSpawn = 0
                 enemyBoss[nextEnemy] = True
-                enemyHP[nextEnemy] = 20
+                enemyHP[nextEnemy] = bossMaxHp
                 enemyX[nextEnemy] = disLength + 25
                 enemyY[nextEnemy] = disHeight - 169
                 # boss music!
@@ -268,9 +271,13 @@ while True:
                 # moving boss up and down
                 if enemyX[i] > disLength - 200:
                     enemyX[i] += -2
-                    # Boss healthbar
-                    pygame.draw.rect(screen, (250, 25, 25), (enemyX[i] + 10, enemyY[i] + 85, enemyHP[i] * 4, 15), 0)
-                    pygame.draw.rect(screen, (0, 0, 0), (enemyX[i] + 10, enemyY[i] + 85, 80, 15), 2)
+
+                    # Boss healthbar + level indication
+                    pygame.draw.rect(screen, (250, 25, 25), (enemyX[i] + 15, enemyY[i] + 85, (enemyHP[i] * 80 / bossMaxHp), 15), 0)
+                    pygame.draw.rect(screen, (0, 0, 0), (enemyX[i] + 15, enemyY[i] + 85, 80, 15), 2)
+                    lvlSurface = levelFont.render(("lvl " + str(bossLevel + 1)), False, (240, 240, 100))
+                    screen.blit(lvlSurface, (enemyX[i] - 40, enemyY[i] + 85))
+
                 else:
                     if enemyY[i] >= disHeight - 170:
                         bossAcc = -1
@@ -278,7 +285,7 @@ while True:
                         bossAcc = 1
                     enemyY[i] += bossAcc
 
-                    # enemy death
+                    # boss death
                     if enemyHP[i] <= 0:
                         if enemyY[i] < disHeight - 100:
                             enemyY[i] += 3
@@ -288,15 +295,18 @@ while True:
                             pygame.mixer.music.play(-1)
                             enemyBoss[i] = False
                     else:
-                        # Boss healthbar
-                        pygame.draw.rect(screen, (250, 25, 25), (enemyX[i] + 10, enemyY[i] + 85, enemyHP[i] * 4, 15), 0)
-                        pygame.draw.rect(screen, (0, 0, 0), (enemyX[i] + 10, enemyY[i] + 85, 80, 15), 2)
+
+                        # Boss healthbar and levels
+                        pygame.draw.rect(screen, (250, 25, 25), (enemyX[i] + 15, enemyY[i] + 85, (enemyHP[i] * 80 / bossMaxHp), 15), 0)
+                        pygame.draw.rect(screen, (0, 0, 0), (enemyX[i] + 15, enemyY[i] + 85, 80, 15), 2)
+                        lvlSurface = levelFont.render(("lvl " + str(bossLevel + 1)), False, (240, 240, 100))
+                        screen.blit(lvlSurface, (enemyX[i] - 40, enemyY[i] + 85))
 
                 screen.blit(bossImg, (enemyX[i], enemyY[i]))
 
                 # SHOOTING FOR BOSS
-                if eCD <= 0 and random.randint(1, 10) == 1 and enemyHP[i] > 0 and enemyX > disLength - 240:
-                    eCD = 120
+                if eCD <= 0 and random.randint(0, 15) == 1 and enemyHP[i] > 0 and enemyX > disLength - 240:
+                    eCD = 150
                     for j in range(3):
                         eNextBul += 1
                         if eNextBul > 10:
@@ -308,6 +318,20 @@ while True:
                         eBulTarX[eNextBul] = pX + 150
                         eBulOrgX[eNextBul] = eBulX[eNextBul]
                         eBulOrgY[eNextBul] = eBulY[eNextBul]
+                # level 2 and above boss gets bonus attack
+                elif 65 >= eCD >= 63 and bossLevel >= 1 and random.randint(0 + bossLevel, 5 + bossLevel) >= 5\
+                        and enemyX > disLength - 240 and enemyHP[i] > 0:
+                    eNextBul += 1
+                    eCD += - 10
+                    if eNextBul > 10:
+                        eNextBul = 0
+                    eBulX[eNextBul] = enemyX[i] + 15
+                    eBulY[eNextBul] = enemyY[i] + 40
+
+                    eBulTarX[eNextBul] = pX + 150
+                    eBulTarY[eNextBul] = pY - 15
+                    eBulOrgX[eNextBul] = eBulX[eNextBul]
+                    eBulOrgY[eNextBul] = eBulY[eNextBul]
 
             # NO BOSS, MOVE ENEMIES FORWARD
             elif enemyX[i] > -70:
@@ -371,7 +395,9 @@ while True:
                                 score += 20
                                 # bonus score in boss mode
                                 if enemyBoss[j] == True:
-                                    score += 130
+                                    score += 100 + (bossLevel * 40)  # 120 score for level 1 boss, 160 for level 2, etc
+                                    bossLevel += 1
+                                    bossMaxHp = 15 + (bossLevel * 5)
 
         # moving and displaying enemy bullets that are in the air
         for i in range(10):
