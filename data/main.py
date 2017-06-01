@@ -6,16 +6,16 @@ import math
 
 '''
 TO DO LIST:
-- music
 - sound effects
 
 CONTROLS:
 w to fly up
 Click to shoot (may not work with mousepad - try a mouse)
 Spacebar to speed boost (might not be kept in final version of game, has a cooldown)
-
+SECRET CONTROL - press E and W together on menu screen to do the boss training scenario (also good for debugging)
 KNOWN BUGS:
-
+- boss hitboxes may not work if hitting to the far right of it
+- inf boost
 '''
 
 # initiate pygame
@@ -100,6 +100,7 @@ while True:
     enemyDeadImg = pygame.image.load("data/enemyDead.png")
     enemyBulImg = pygame.image.load("data/enemyBullet.png")
     bossImg = pygame.image.load("data/bossImage.png")
+    dmgBossImg = pygame.image.load("data/damagedBoss.png")
     maxHP = 2  # def 2
     enemyX = [-100]
     enemyY = [100]
@@ -118,6 +119,14 @@ while True:
     bossSpawn = 0 # makes boss spawning more common if it doesnt spawn, or vice versa
     bossLevel = 0  # increments by one every defeated boss, starts at 0 (displayed as level 1 though)
     bossMaxHp = 15 + (bossLevel * 5)
+    bossTrain = False
+    # boss training demo
+    if pressed[pygame.K_e]:
+        bossSpawn = 30
+        bossLevel = 1  # level 2 starts
+        bossMaxHp = 15 + (bossLevel * 5)
+        bossTrain = True
+
     for i in range (4):  # max 4 enemies at once
         enemyX.append(-100)
         enemyY.append(100)
@@ -302,11 +311,16 @@ while True:
                         lvlSurface = levelFont.render(("lvl " + str(bossLevel + 1)), False, (240, 240, 100))
                         screen.blit(lvlSurface, (enemyX[i] - 40, enemyY[i] + 85))
 
-                screen.blit(bossImg, (enemyX[i], enemyY[i]))
+                if enemyHP[i] < bossMaxHp * 0.5:
+                    screen.blit(dmgBossImg, (enemyX[i], enemyY[i]))
+                else:
+                    screen.blit(bossImg, (enemyX[i], enemyY[i]))
 
                 # SHOOTING FOR BOSS
                 if eCD <= 0 and random.randint(0, 15) == 1 and enemyHP[i] > 0 and enemyX > disLength - 240:
-                    eCD = 150
+                    eCD = 150 - (bossLevel * 5)
+                    if eCD < 100:
+                        eCD = 100
                     for j in range(3):
                         eNextBul += 1
                         if eNextBul > 10:
@@ -321,17 +335,31 @@ while True:
                 # level 2 and above boss gets bonus attack
                 elif 65 >= eCD >= 63 and bossLevel >= 1 and random.randint(0 + bossLevel, 5 + bossLevel) >= 5\
                         and enemyX > disLength - 240 and enemyHP[i] > 0:
-                    eNextBul += 1
                     eCD += - 10
-                    if eNextBul > 10:
-                        eNextBul = 0
-                    eBulX[eNextBul] = enemyX[i] + 15
-                    eBulY[eNextBul] = enemyY[i] + 40
+                    if bossLevel >= 4:  # level 5 and up shooting
+                        for j in range(2):
+                            eNextBul += 1
+                            if eNextBul > 10:
+                                eNextBul = 0
+                            eBulX[eNextBul] = enemyX[i] + 15
+                            eBulY[eNextBul] = enemyY[i] + 40
 
-                    eBulTarX[eNextBul] = pX + 150
-                    eBulTarY[eNextBul] = pY - 15
-                    eBulOrgX[eNextBul] = eBulX[eNextBul]
-                    eBulOrgY[eNextBul] = eBulY[eNextBul]
+                            eBulTarX[eNextBul] = pX + 150
+                            eBulTarY[eNextBul] = pY - 70 + (j * 120)
+                            eBulOrgX[eNextBul] = eBulX[eNextBul]
+                            eBulOrgY[eNextBul] = eBulY[eNextBul]
+                    else:  # other level shooting
+                        eNextBul += 1
+                        eCD += - 10
+                        if eNextBul > 10:
+                            eNextBul = 0
+                        eBulX[eNextBul] = enemyX[i] + 15
+                        eBulY[eNextBul] = enemyY[i] + 40
+
+                        eBulTarX[eNextBul] = pX + 150
+                        eBulTarY[eNextBul] = pY - 15
+                        eBulOrgX[eNextBul] = eBulX[eNextBul]
+                        eBulOrgY[eNextBul] = eBulY[eNextBul]
 
             # NO BOSS, MOVE ENEMIES FORWARD
             elif enemyX[i] > -70:
@@ -345,7 +373,9 @@ while True:
 
                 # SHOOTING FOR ENEMY
                 if eCD <= 0 and random.randint(1,30) == 1 and enemyHP[i] > 0 and enemyX[i] > 75:
-                    eCD = 80
+                    eCD = 85 - (bossLevel * 3)
+                    if eCD < 60:
+                        eCD = 60
                     eNextBul += 1
                     if eNextBul > 10:
                         eNextBul = 0
@@ -391,12 +421,19 @@ while True:
                     for j in range(4):
                         if bulX[i] - 45 < enemyX[j] + 25 < bulX[i] + 45 and bulY[i] - 60 < enemyY[j] + 10 < bulY[i] + 60:
                             enemyHP[j] -= 1
+                            # enemy died
                             if enemyHP[j] == 0:
                                 score += 20
                                 # bonus score in boss mode
                                 if enemyBoss[j] == True:
                                     score += 100 + (bossLevel * 40)  # 120 score for level 1 boss, 160 for level 2, etc
-                                    bossLevel += 1
+                                    # training scenario stuff
+                                    if bossTrain == True:
+                                        bossLevel += 2  # increases boss level by 2 if training.
+                                        bossSpawn = 30
+                                    else:  # normal game
+                                        bossLevel += 1
+
                                     bossMaxHp = 15 + (bossLevel * 5)
 
         # moving and displaying enemy bullets that are in the air
