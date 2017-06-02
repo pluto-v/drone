@@ -299,7 +299,7 @@ while True:
                         if enemyY[i] < disHeight - 100:
                             enemyY[i] += 3
                         enemyX[i] += - 5
-                        if enemyX[i] <= -60:
+                        if enemyX[i] <= -90:
                             pygame.mixer.music.load("data/backgroundMusic.mp3")
                             pygame.mixer.music.play(-1)
                             enemyBoss[i] = False
