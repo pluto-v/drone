@@ -1,0 +1,48 @@
+Traceback (most recent call last):
+  File "pyg.py", line 22, in <module>
+  File "runpy.pyc", line 240, in run_path
+  File "runpy.pyc", line 82, in _run_module_code
+  File "runpy.pyc", line 72, in _run_code
+  File "data\main.py", line 58, in <module>
+    label = spashFont.render("Score: %s" % score, 1, (0, 0, 0))
+NameError: name 'score' is not defined
+Traceback (most recent call last):
+  File "pyg.py", line 22, in <module>
+  File "runpy.pyc", line 240, in run_path
+  File "runpy.pyc", line 82, in _run_module_code
+  File "runpy.pyc", line 72, in _run_code
+  File "data\main.py", line 32, in <module>
+    hi_score = open("high.txt", 'w').readline()
+IOError: File not open for reading
+Traceback (most recent call last):
+  File "pyg.py", line 22, in <module>
+  File "runpy.pyc", line 240, in run_path
+  File "runpy.pyc", line 82, in _run_module_code
+  File "runpy.pyc", line 72, in _run_code
+  File "data\main.py", line 33, in <module>
+    hi_score = score_record.readline()
+IOError: File not open for reading
+Traceback (most recent call last):
+  File "pyg.py", line 22, in <module>
+  File "runpy.pyc", line 240, in run_path
+  File "runpy.pyc", line 82, in _run_module_code
+  File "runpy.pyc", line 72, in _run_code
+  File "data\main.py", line 59, in <module>
+    label = spashFont.render("Hi Score: %s" % hi_score, 1, (0, 0, 0))
+NameError: name 'spashFont' is not defined
+Traceback (most recent call last):
+  File "pyg.py", line 22, in <module>
+  File "runpy.pyc", line 240, in run_path
+  File "runpy.pyc", line 82, in _run_module_code
+  File "runpy.pyc", line 72, in _run_code
+  File "data\main.py", line 472, in <module>
+    score_change.write(score)
+TypeError: expected a character buffer object
+Traceback (most recent call last):
+  File "pyg.py", line 22, in <module>
+  File "runpy.pyc", line 240, in run_path
+  File "runpy.pyc", line 82, in _run_module_code
+  File "runpy.pyc", line 72, in _run_code
+  File "data\main.py", line 472, in <module>
+    score_change.write(score)
+TypeError: expected a character buffer object

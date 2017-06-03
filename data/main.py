@@ -3,6 +3,7 @@ import sys
 import random
 import time
 import math
+import pickle
 
 '''
 TO DO LIST:
@@ -29,12 +30,21 @@ while True:
     disHeight = 400
     screen = pygame.display.set_mode((disLength,disHeight))
 
+    try:
+        with open('data/score.dat', 'rb') as file:
+            hi_score = pickle.load(file)
+    except:
+        hi_score = 0
+
     pygame.display.set_caption("drone")
     clock = pygame.time.Clock()
 
     # = = = START THE GAME - SPLASH SCREEN = = = #
     pygame.mixer.music.load("data/titleMusic.mp3")
     pygame.mixer.music.play(-1)
+
+    splashFont = pygame.font.SysFont("Courier New", 30)
+
     while True:
         splashScreen = pygame.image.load("data/splash.png")
         screen.blit(splashScreen, (0, 0))
@@ -48,6 +58,9 @@ while True:
         clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit()
+
+        label = splashFont.render("Hi Score: %d" % hi_score, 1, (0, 0, 0))
+        screen.blit(label, (20, 300))
 
         pygame.display.update()
 
@@ -392,6 +405,8 @@ while True:
         # colour of most of ground (green part): (168, 224, 101, 255) RGBA
         if pY >= disHeight - 51 or colour == (167,223,100,255) or colour == (254,81,84,255):
             time.sleep(0.5)
+            with open('data/score.dat', 'wb') as file:
+                pickle.dump(score, file)
             dead = True
             pygame.display.update()
             time.sleep(0.5)
@@ -458,6 +473,8 @@ while True:
                 # hitting the player
                 if pY + 5 < eBulY[i] < pY + 30 and pX + 25 < eBulX[i] < pX + 100:
                     time.sleep(0.5)
+                    with open('data/score.dat', 'wb') as file:
+                        pickle.dump(score, file)
                     dead = True
                     pygame.display.update()
                     time.sleep(0.5)
