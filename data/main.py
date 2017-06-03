@@ -405,8 +405,9 @@ while True:
         # colour of most of ground (green part): (168, 224, 101, 255) RGBA
         if pY >= disHeight - 51 or colour == (167,223,100,255) or colour == (254,81,84,255):
             time.sleep(0.5)
-            with open('data/score.dat', 'wb') as file:
-                pickle.dump(score, file)
+            if score > hi_score:
+                with open('data/score.dat', 'wb') as file:
+                    pickle.dump(score, file)
             dead = True
             pygame.display.update()
             time.sleep(0.5)
@@ -473,8 +474,9 @@ while True:
                 # hitting the player
                 if pY + 5 < eBulY[i] < pY + 30 and pX + 25 < eBulX[i] < pX + 100:
                     time.sleep(0.5)
-                    with open('data/score.dat', 'wb') as file:
-                        pickle.dump(score, file)
+                    if score > hi_score:
+                        with open('data/score.dat', 'wb') as file:
+                            pickle.dump(score, file)
                     dead = True
                     pygame.display.update()
                     time.sleep(0.5)
