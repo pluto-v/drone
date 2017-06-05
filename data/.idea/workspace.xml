@@ -23,8 +23,8 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="475" column="33" selection-start-line="475" selection-start-column="33" selection-end-line="475" selection-end-column="33" />
+            <state relative-caret-position="542">
+              <caret line="340" column="56" selection-start-line="340" selection-start-column="56" selection-end-line="340" selection-end-column="56" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -332,7 +332,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-11" y="0" width="1934" height="1042" extended-state="1" />
+    <frame x="-11" y="0" width="1934" height="1042" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1495816" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -587,8 +587,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="475" column="33" selection-start-line="475" selection-start-column="33" selection-end-line="475" selection-end-column="33" />
+        <state relative-caret-position="542">
+          <caret line="340" column="56" selection-start-line="340" selection-start-column="56" selection-end-line="340" selection-end-column="56" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
