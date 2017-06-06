@@ -20,7 +20,7 @@ KNOWN BUGS:
 '''
 
 # initiate pygame
-pygame.mixer.pre_init(44100, 16, 2, 4096)
+pygame.mixer.pre_init(44100, 16, 4, 4096)
 pygame.init()
 pygame.font.init()
 time.sleep(1)
@@ -35,7 +35,8 @@ while True:
     # MUSIC
     channel1 = pygame.mixer.Channel(0)
     channel2 = pygame.mixer.Channel(1)
-    WAVFILE = 'attackSound.wav'
+    atkSound = pygame.mixer.Sound('data/attackSound.wav')
+    expSound = pygame.mixer.Sound('data/explodeSound.wav')
 
     try:
         with open('data/config.dat', 'rb') as file:
@@ -236,10 +237,7 @@ while True:
             bulTarY[curBul] = mousePos[1]
             reload = maxReload
             # shooting sound
-            s = pygame.mixer.Sound(WAVFILE)
-            s.play()
-            channel2 = s.play()
-            channel2.play(s)
+            atkSound.play()
 
         # if bullet is in air
         for i in range(4):
@@ -443,6 +441,7 @@ while True:
                                 colour2 == (167,223,100,255) or colour2 == (254,81,84,255):
                     bulTarX[i] = bulX[i]
                     bulExploded[i] = True
+                    expSound.play()
 
                     # do dmg to enemies
                     for j in range(4):
