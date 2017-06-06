@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "pyg.py", line 22, in <module>
+  File "runpy.pyc", line 240, in run_path
+  File "runpy.pyc", line 82, in _run_module_code
+  File "runpy.pyc", line 72, in _run_code
+  File "data\main.py", line 39, in <module>
+    attackSound = pygame.mixer.Sound(file="attackSound.mp3")
+TypeError: function takes exactly 1 argument (0 given)
+Traceback (most recent call last):
+  File "pyg.py", line 22, in <module>
+  File "runpy.pyc", line 240, in run_path
+  File "runpy.pyc", line 82, in _run_module_code
+  File "runpy.pyc", line 72, in _run_code
+  File "data\main.py", line 240, in <module>
+    channel2.play("attackSound.mp3")
+TypeError: argument 1 must be Sound, not str
+Traceback (most recent call last):
+  File "pyg.py", line 22, in <module>
+  File "runpy.pyc", line 240, in run_path
+  File "runpy.pyc", line 82, in _run_module_code
+  File "runpy.pyc", line 72, in _run_code
+  File "data\main.py", line 241, in <module>
+    channel2.play(WAVFILE)
+TypeError: argument 1 must be Sound, not str
+Traceback (most recent call last):
+  File "pyg.py", line 22, in <module>
+  File "runpy.pyc", line 240, in run_path
+  File "runpy.pyc", line 82, in _run_module_code
+  File "runpy.pyc", line 72, in _run_code
+  File "data\main.py", line 241, in <module>
+    channel2.play(-1)
+TypeError: argument 1 must be Sound, not int
