@@ -417,6 +417,8 @@ while True:
             if score > hi_score:
                 with open('data/config.dat', 'wb') as file:
                     pickle.dump(score, file)
+            splashScreen = pygame.image.load("data/dead.png")
+            screen.blit(splashScreen, (0, 0))
             dead = True
             pygame.display.update()
             time.sleep(0.5)
@@ -487,6 +489,8 @@ while True:
                     if score > hi_score:
                         with open('data/config.dat', 'wb') as file:
                             pickle.dump(score, file)
+                    splashScreen = pygame.image.load("data/dead.png")
+                    screen.blit(splashScreen, (0, 0))
                     dead = True
                     pygame.display.update()
                     time.sleep(0.5)
