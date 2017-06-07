@@ -103,3 +103,4 @@ ENV/
 # GAME STUFF
 .idea/
 data/.idea/
+data/config.dat
