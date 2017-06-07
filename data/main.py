@@ -6,9 +6,8 @@ import math
 import pickle
 
 '''
-TO DO LIST:
-- sound effects
-
+TO-DO list:
+- polish then add to play stores
 CONTROLS:
 w to fly up
 Click to shoot (may not work with mousepad - try a mouse)
@@ -17,6 +16,7 @@ SECRET CONTROL - press E and W together on menu screen to do the boss training s
 KNOWN BUGS:
 - boss hitboxes may not work if hitting to the far right of it
 - inf boost
+- delayed sound
 '''
 
 # initiate pygame
@@ -32,7 +32,7 @@ while True:
     disHeight = 400
     screen = pygame.display.set_mode((disLength,disHeight))
 
-    # MUSIC
+    # MUSIC NOTE (pun not intended): .wav files must be 16bit to work (.wav is also recommended, mp3 is buggy)
     channel1 = pygame.mixer.Channel(0)
     channel2 = pygame.mixer.Channel(1)
     atkSound = pygame.mixer.Sound('data/attackSound.wav')
