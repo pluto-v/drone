@@ -419,9 +419,11 @@ while True:
                     pickle.dump(score, file)
             splashScreen = pygame.image.load("data/dead.png")
             screen.blit(splashScreen, (0, 0))
+            textSurface = scoreFont.render(("score:" + scoreText), False, (0, 0, 0))
+            screen.blit(textSurface, (disLength - 140, 10))
             dead = True
             pygame.display.update()
-            time.sleep(0.5)
+            time.sleep(1)
 
         # checking for bullet collission
         for i in range(4):
@@ -491,9 +493,11 @@ while True:
                             pickle.dump(score, file)
                     splashScreen = pygame.image.load("data/dead.png")
                     screen.blit(splashScreen, (0, 0))
+                    textSurface = scoreFont.render(("score:" + scoreText), False, (0, 0, 0))
+                    screen.blit(textSurface, (disLength - 140, 10))
                     dead = True
                     pygame.display.update()
-                    time.sleep(0.5)
+                    time.sleep(1)d
 
         # SCORES
         scoreText = str(score)
