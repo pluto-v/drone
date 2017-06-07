@@ -497,7 +497,7 @@ while True:
                     screen.blit(textSurface, (disLength - 140, 10))
                     dead = True
                     pygame.display.update()
-                    time.sleep(1)d
+                    time.sleep(1)
 
         # SCORES
         scoreText = str(score)
