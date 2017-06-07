@@ -102,5 +102,4 @@ ENV/
 
 # GAME STUFF
 .idea/
-data/config.dat
 data/.idea/
