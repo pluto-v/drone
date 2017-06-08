@@ -37,8 +37,13 @@ while True:
     # MUSIC NOTE (pun not intended): .wav files must be 16bit to work (.wav is also recommended, mp3 is buggy)
     channel1 = pygame.mixer.Channel(0)
     channel2 = pygame.mixer.Channel(1)
+    channel3 = pygame.mixer.Channel(2)
+    channel4 = pygame.mixer.Channel(3)
     atkSound = pygame.mixer.Sound('data/attackSound.wav')
     expSound = pygame.mixer.Sound('data/explodeSound.wav')
+    menuSound = pygame.mixer.Sound('data/titleMusic.wav')
+    backSound = pygame.mixer.Sound('data/backgroundMusic.wav')
+    bossSound = pygame.mixer.Sound('data/bossMusic.wav')
 
     try:
         with open('data/config.dat', 'rb') as file:
@@ -50,8 +55,7 @@ while True:
     clock = pygame.time.Clock()
 
     # = = = START THE GAME - SPLASH SCREEN = = = #
-    # pygame.mixer.music.load("data/titleMusic.mp3")
-    # pygame.mixer.music.play(-1)
+    channel4.play(menuSound, loops=-1)
 
     splashFont = pygame.font.SysFont("Courier New", 30)
 
@@ -170,8 +174,7 @@ while True:
 
     # =========== MAIN PROGRAM ============= #
 
-    # pygame.mixer.music.load("data/backgroundMusic.mp3")
-    # pygame.mixer.music.play(-1)
+    channel4.play(backSound,loops=-1)
     while not dead:
         screen.fill(sky)
 
@@ -288,8 +291,7 @@ while True:
                 enemyX[nextEnemy] = disLength + 25
                 enemyY[nextEnemy] = disHeight - 169
                 # boss music!
-                # pygame.mixer.music.load('data/bossMusic.mp3')
-                # pygame.mixer.music.play(-1)
+                channel4.play(bossSound, loops= -1)
             # spawn normal enemy
             else:
                 enemyBoss[nextEnemy] = False
@@ -325,8 +327,7 @@ while True:
                             enemyY[i] += 3
                         enemyX[i] += - 5
                         if enemyX[i] <= -90:
-                            # pygame.mixer.music.load("data/backgroundMusic.mp3")
-                            # pygame.mixer.music.play(-1)
+                            channel4.play(backSound, loops=-1)
                             enemyBoss[i] = False
                     else:
 
