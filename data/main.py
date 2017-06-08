@@ -17,11 +17,12 @@ KNOWN BUGS:
 - boss hitboxes may not work if hitting to the far right of it
 - inf boost
 - delayed sound
+- RANDOM CRASHES WTF
 '''
 
 # initiate pygame
-pygame.mixer.pre_init(44100, 16, 4, 4096)
 pygame.init()
+pygame.mixer.init(22050, -16, 4, 256)
 pygame.font.init()
 time.sleep(1)
 
@@ -39,7 +40,7 @@ while True:
     expSound = pygame.mixer.Sound('data/explodeSound.wav')
 
     try:
-        with open('data/config.dat', 'rb') as file:
+        with open('data/config.dat', 'rb') as file:s
             hi_score = pickle.load(file)
     except:
         hi_score = 0
@@ -48,8 +49,8 @@ while True:
     clock = pygame.time.Clock()
 
     # = = = START THE GAME - SPLASH SCREEN = = = #
-    pygame.mixer.music.load("data/titleMusic.mp3")
-    pygame.mixer.music.play(-1)
+    # pygame.mixer.music.load("data/titleMusic.mp3")
+    # pygame.mixer.music.play(-1)
 
     splashFont = pygame.font.SysFont("Courier New", 30)
 
@@ -71,6 +72,7 @@ while True:
         screen.blit(label, (20, 300))
 
         pygame.display.update()
+
 
     # =============================================
     # score and colours
@@ -167,8 +169,8 @@ while True:
 
     # =========== MAIN PROGRAM ============= #
 
-    pygame.mixer.music.load("data/backgroundMusic.mp3")
-    pygame.mixer.music.play(-1)
+    # pygame.mixer.music.load("data/backgroundMusic.mp3")
+    # pygame.mixer.music.play(-1)
     while not dead:
         screen.fill(sky)
 
@@ -285,8 +287,8 @@ while True:
                 enemyX[nextEnemy] = disLength + 25
                 enemyY[nextEnemy] = disHeight - 169
                 # boss music!
-                pygame.mixer.music.load('data/bossMusic.mp3')
-                pygame.mixer.music.play(-1)
+                # pygame.mixer.music.load('data/bossMusic.mp3')
+                # pygame.mixer.music.play(-1)
             # spawn normal enemy
             else:
                 enemyBoss[nextEnemy] = False
@@ -322,8 +324,8 @@ while True:
                             enemyY[i] += 3
                         enemyX[i] += - 5
                         if enemyX[i] <= -90:
-                            pygame.mixer.music.load("data/backgroundMusic.mp3")
-                            pygame.mixer.music.play(-1)
+                            # pygame.mixer.music.load("data/backgroundMusic.mp3")
+                            # pygame.mixer.music.play(-1)
                             enemyBoss[i] = False
                     else:
 
@@ -417,10 +419,10 @@ while True:
             if score > hi_score:
                 with open('data/config.dat', 'wb') as file:
                     pickle.dump(score, file)
-            splashScreen = pygame.image.load("data/dead.png")
-            screen.blit(splashScreen, (0, 0))
-            textSurface = scoreFont.render(("score:" + scoreText), False, (0, 0, 0))
-            screen.blit(textSurface, (disLength - 140, 10))
+            # splashScreen = pygame.image.load("data/dead.png")
+            # screen.blit(splashScreen, (0, 0))
+            # textSurface = scoreFont.render(("score:" + scoreText), False, (0, 0, 0))
+            # screen.blit(textSurface, (disLength - 140, 10))
             dead = True
             pygame.display.update()
             time.sleep(1)
@@ -491,10 +493,10 @@ while True:
                     if score > hi_score:
                         with open('data/config.dat', 'wb') as file:
                             pickle.dump(score, file)
-                    splashScreen = pygame.image.load("data/dead.png")
-                    screen.blit(splashScreen, (0, 0))
-                    textSurface = scoreFont.render(("score:" + scoreText), False, (0, 0, 0))
-                    screen.blit(textSurface, (disLength - 140, 10))
+                    # splashScreen = pygame.image.load("data/dead.png")
+                    # screen.blit(splashScreen, (0, 0))
+                    # textSurface = scoreFont.render(("score:" + scoreText), False, (0, 0, 0))
+                    # screen.blit(textSurface, (disLength - 140, 10))
                     dead = True
                     pygame.display.update()
                     time.sleep(1)
