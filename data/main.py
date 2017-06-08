@@ -21,8 +21,9 @@ KNOWN BUGS:
 '''
 
 # initiate pygame
+pygame.mixer.pre_init(22050, -16, 4, 512)
+pygame.mixer.init()
 pygame.init()
-pygame.mixer.init(22050, -16, 4, 256)
 pygame.font.init()
 time.sleep(1)
 
@@ -40,7 +41,7 @@ while True:
     expSound = pygame.mixer.Sound('data/explodeSound.wav')
 
     try:
-        with open('data/config.dat', 'rb') as file:s
+        with open('data/config.dat', 'rb') as file:
             hi_score = pickle.load(file)
     except:
         hi_score = 0
