@@ -78,7 +78,6 @@ while True:
 
         pygame.display.update()
 
-
     # =============================================
     # score and colours
     score = 0
@@ -284,7 +283,7 @@ while True:
                     enemyY[nextEnemy] = disHeight - 100
 
             # spawning boss
-            if random.randint(0,25) + bossSpawn >= 32:  # normally randint 0,25 + bossSpawn >= 30
+            if random.randint(0,25) + bossSpawn >= 30:  # normally randint 0,25 + bossSpawn >= 30
                 bossSpawn = 0
                 enemyBoss[nextEnemy] = True
                 enemyHP[nextEnemy] = bossMaxHp
@@ -296,7 +295,7 @@ while True:
             else:
                 enemyBoss[nextEnemy] = False
                 enemyHP[nextEnemy] = maxHP
-                bossSpawn += 3  # boss gets more common, normally += 1
+                bossSpawn += 1  # boss gets more common, normally += 1
                 enemyX[nextEnemy] = disLength
 
         # Enemy logic
